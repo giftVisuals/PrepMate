@@ -1,0 +1,2299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PrepMate — Study Smarter. Score Higher. Succeed Together.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --white: #FFFFFF;
+    --mint: #F3FBF6;
+    --ink: #142019;
+    --ink-soft: #5C6B62;
+    --green: #1FAE55;
+    --green-deep: #0F7A3D;
+    --green-pale: #E4F6EB;
+    --gold: #E7A83C;
+    --glass: rgba(255,255,255,0.6);
+    --glass-strong: rgba(255,255,255,0.85);
+    --glass-border: rgba(255,255,255,0.95);
+    --shadow: rgba(15,122,61,0.14);
+    --line: rgba(31,174,85,0.14);
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+
+  body{
+    font-family:'Inter', sans-serif;
+    background:
+      radial-gradient(circle at 10% 5%, rgba(31,174,85,0.10), transparent 40%),
+      radial-gradient(circle at 90% 15%, rgba(231,168,60,0.08), transparent 35%),
+      radial-gradient(circle at 50% 95%, rgba(31,174,85,0.08), transparent 45%),
+      var(--white);
+    color:var(--ink);
+    min-height:100vh;
+    overflow-x:hidden;
+    position:relative;
+  }
+
+  .blob{position:fixed;border-radius:50%;filter:blur(70px);z-index:0;pointer-events:none;opacity:0.6;}
+  .blob-1{width:360px;height:360px;background:radial-gradient(circle, rgba(31,174,85,0.30), transparent 70%);top:-100px;left:-120px;animation:drift1 24s ease-in-out infinite;}
+  .blob-2{width:300px;height:300px;background:radial-gradient(circle, rgba(231,168,60,0.22), transparent 70%);top:25%;right:-140px;animation:drift2 28s ease-in-out infinite;}
+  .blob-3{width:280px;height:280px;background:radial-gradient(circle, rgba(31,174,85,0.18), transparent 70%);bottom:-100px;left:15%;animation:drift1 32s ease-in-out infinite reverse;}
+  @keyframes drift1{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(30px,40px) scale(1.08);}}
+  @keyframes drift2{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(-25px,30px) scale(1.05);}}
+  @media (prefers-reduced-motion: reduce){.blob{animation:none !important;}*{animation-duration:0.001ms !important;transition-duration:0.001ms !important;}}
+
+  .wrap{position:relative;z-index:1;max-width:520px;margin:0 auto;padding:0 20px 40px;}
+
+  nav{display:flex;align-items:center;justify-content:space-between;padding:20px 4px 6px;}
+  .logo{display:flex;align-items:center;gap:9px;}
+  .logo img{width:38px;height:38px;object-fit:contain;}
+  .logo-text{font-family:'Poppins', sans-serif;font-weight:700;font-size:1.25rem;letter-spacing:-0.01em;}
+  .logo-text .mate{color:var(--green-deep);}
+  .nav-link{font-size:0.85rem;color:var(--ink-soft);text-decoration:none;font-weight:600;padding:9px 16px;border-radius:100px;transition:background 0.2s,color 0.2s;border:1px solid transparent;}
+  .nav-link:hover,.nav-link:focus-visible{background:var(--green-pale);color:var(--green-deep);}
+
+  .eyebrow{display:inline-flex;align-items:center;gap:6px;font-family:'IBM Plex Mono', monospace;font-size:0.7rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--green-deep);background:var(--green-pale);border:1px solid var(--line);padding:7px 13px;border-radius:100px;margin-top:26px;}
+  .eyebrow-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);}
+
+  h1{font-family:'Poppins', sans-serif;font-weight:700;font-size:2.35rem;line-height:1.12;letter-spacing:-0.02em;margin-top:18px;}
+  h1 .accent{color:var(--green-deep);}
+
+  .subhead{margin-top:15px;font-size:1rem;line-height:1.6;color:var(--ink-soft);max-width:40ch;}
+
+  .cta-row{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap;}
+  .btn{font-family:'Inter', sans-serif;font-weight:700;font-size:0.92rem;padding:15px 26px;border-radius:15px;border:none;cursor:pointer;transition:transform 0.15s ease,box-shadow 0.15s ease,background 0.2s;display:inline-flex;align-items:center;gap:8px;}
+  .btn:active{transform:scale(0.97);}
+  .btn-primary{background:linear-gradient(135deg, var(--green), var(--green-deep));color:#fff;box-shadow:0 12px 28px var(--shadow);}
+  .btn-primary:hover{box-shadow:0 16px 34px var(--shadow);transform:translateY(-1px);}
+  .btn-ghost{background:var(--glass-strong);color:var(--ink);border:1px solid var(--line);backdrop-filter:blur(10px);}
+  .btn-ghost:hover{background:#fff;}
+  .btn:focus-visible{outline:2px solid var(--green);outline-offset:3px;}
+
+  .demo-card{margin-top:34px;background:var(--glass);border:1px solid var(--glass-border);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-radius:24px;padding:20px;box-shadow:0 24px 55px var(--shadow), inset 0 1px 0 rgba(255,255,255,0.8);position:relative;overflow:hidden;}
+  .demo-card::before{content:"";position:absolute;top:-40%;right:-30%;width:220px;height:220px;background:radial-gradient(circle, rgba(231,168,60,0.22), transparent 70%);border-radius:50%;pointer-events:none;}
+  .demo-label{font-family:'IBM Plex Mono', monospace;font-size:0.68rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-soft);display:flex;justify-content:space-between;align-items:center;}
+  .live-pulse{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 1.8s infinite;}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(31,174,85,0.5);}70%{box-shadow:0 0 0 8px rgba(31,174,85,0);}100%{box-shadow:0 0 0 0 rgba(31,174,85,0);}}
+  .demo-question{font-family:'Poppins', sans-serif;font-size:1.02rem;font-weight:600;margin-top:12px;line-height:1.4;}
+  .demo-options{margin-top:14px;display:flex;flex-direction:column;gap:8px;}
+  .demo-opt{font-size:0.87rem;padding:11px 14px;border-radius:12px;background:rgba(255,255,255,0.7);border:1px solid var(--line);color:var(--ink-soft);}
+  .demo-opt.correct{background:var(--green-pale);border-color:rgba(31,174,85,0.4);color:var(--green-deep);font-weight:700;}
+  .demo-footnote{margin-top:14px;font-size:0.78rem;color:var(--ink-soft);}
+
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:32px;}
+  .stat{background:var(--glass);border:1px solid var(--glass-border);backdrop-filter:blur(14px);border-radius:16px;padding:14px 8px;text-align:center;}
+  .stat-num{font-family:'Poppins', sans-serif;font-size:1.25rem;font-weight:700;color:var(--green-deep);}
+  .stat-label{font-size:0.66rem;color:var(--ink-soft);margin-top:2px;}
+
+  section{margin-top:58px;}
+  .section-eyebrow{font-family:'IBM Plex Mono', monospace;font-size:0.68rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--green-deep);font-weight:500;}
+  .section-title{font-family:'Poppins', sans-serif;font-size:1.5rem;font-weight:700;letter-spacing:-0.01em;margin-top:6px;}
+  .section-sub{font-size:0.92rem;color:var(--ink-soft);margin-top:8px;line-height:1.55;max-width:42ch;}
+
+  .problem-list{margin-top:22px;display:flex;flex-direction:column;gap:10px;}
+  .problem-item{display:flex;gap:12px;align-items:flex-start;background:var(--glass);border:1px solid var(--glass-border);backdrop-filter:blur(14px);border-radius:16px;padding:14px 16px;}
+  .problem-icon{font-size:1.1rem;line-height:1;margin-top:1px;}
+  .problem-text{font-size:0.87rem;color:var(--ink-soft);line-height:1.5;}
+  .problem-text strong{color:var(--ink);}
+
+  .step-list{margin-top:22px;display:flex;flex-direction:column;gap:12px;}
+  .step{background:var(--glass);border:1px solid var(--glass-border);backdrop-filter:blur(14px);border-radius:18px;padding:17px;display:flex;gap:14px;align-items:flex-start;}
+  .step-icon{width:38px;height:38px;flex-shrink:0;border-radius:12px;background:linear-gradient(135deg, var(--green-pale), rgba(231,168,60,0.14));display:flex;align-items:center;justify-content:center;font-family:'Poppins', sans-serif;font-weight:700;color:var(--green-deep);font-size:0.95rem;}
+  .step-title{font-weight:700;font-size:0.95rem;font-family:'Poppins', sans-serif;}
+  .step-desc{font-size:0.85rem;color:var(--ink-soft);margin-top:4px;line-height:1.5;}
+
+  .feature-grid{margin-top:22px;display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .feature-card{background:var(--glass);border:1px solid var(--glass-border);backdrop-filter:blur(14px);border-radius:16px;padding:15px;}
+  .feature-emoji{font-size:1.3rem;}
+  .feature-title{font-family:'Poppins', sans-serif;font-weight:600;font-size:0.85rem;margin-top:8px;}
+  .feature-desc{font-size:0.76rem;color:var(--ink-soft);margin-top:4px;line-height:1.45;}
+
+  .chip-row{margin-top:18px;display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{font-size:0.78rem;font-weight:600;color:var(--green-deep);background:var(--green-pale);border:1px solid var(--line);padding:8px 14px;border-radius:100px;}
+  .chip-btn{cursor:pointer;transition:transform 0.15s, background 0.2s;}
+  .chip-btn:active{transform:scale(0.95);}
+  .chip-btn.selected{background:linear-gradient(135deg, var(--green), var(--green-deep));color:#fff;}
+
+  .quiz-card{margin-top:22px;background:var(--glass);border:1px solid var(--glass-border);backdrop-filter:blur(18px);border-radius:22px;padding:20px;box-shadow:0 20px 50px var(--shadow);}
+  .quiz-option-btn{font-size:0.87rem;padding:12px 14px;border-radius:12px;background:rgba(255,255,255,0.75);border:1px solid var(--line);color:var(--ink);width:100%;text-align:left;cursor:pointer;font-family:'Inter', sans-serif;transition:background 0.2s, border-color 0.2s;}
+  .quiz-option-btn:active{transform:scale(0.98);}
+  .quiz-option-btn.correct{background:var(--green-pale);border-color:rgba(31,174,85,0.5);color:var(--green-deep);font-weight:700;}
+  .quiz-option-btn.wrong{background:rgba(225,91,91,0.12);border-color:rgba(225,91,91,0.5);color:#B93838;font-weight:700;}
+  .quiz-option-btn:disabled{cursor:default;}
+  .quiz-explanation{margin-top:14px;font-size:0.85rem;color:var(--ink-soft);background:rgba(255,255,255,0.6);border-radius:12px;padding:12px 14px;line-height:1.5;}
+
+  .chat-window{margin-top:20px;background:var(--glass);border:1px solid var(--glass-border);backdrop-filter:blur(18px);border-radius:22px;padding:16px;min-height:320px;max-height:440px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;}
+  .chat-bubble{max-width:80%;padding:11px 14px;border-radius:16px;font-size:0.87rem;line-height:1.5;}
+  .chat-ai{align-self:flex-start;background:rgba(255,255,255,0.85);border:1px solid var(--line);color:var(--ink);border-bottom-left-radius:4px;}
+  .chat-user{align-self:flex-end;background:linear-gradient(135deg, var(--green), var(--green-deep));color:#fff;border-bottom-right-radius:4px;}
+  .chat-typing{align-self:flex-start;font-size:0.8rem;color:var(--ink-soft);font-style:italic;}
+
+  .chat-page{position:fixed;inset:0;background:var(--white);z-index:800;display:flex;flex-direction:column;}
+  .chat-page-header{display:flex;align-items:center;justify-content:space-between;padding:16px 16px 12px;border-bottom:1px solid var(--line);flex-shrink:0;}
+  .chat-back-btn{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--glass);display:flex;align-items:center;justify-content:center;color:var(--ink);cursor:pointer;}
+  .chat-page-title{font-family:'Poppins', sans-serif;font-weight:700;font-size:1rem;}
+  .chat-page .chat-window{flex:1;margin:0;border-radius:0;border:none;background:transparent;backdrop-filter:none;max-height:none;padding:16px;}
+  .chat-page .chat-input-row{padding:12px 16px 18px;margin-top:0;border-top:1px solid var(--line);background:var(--white);}
+  .chat-page{height:100dvh;}
+
+  .chat-actions{display:flex;gap:6px;margin-top:6px;align-self:flex-start;}
+  .chat-action-btn{width:28px;height:28px;border-radius:50%;border:1px solid var(--line);background:rgba(255,255,255,0.7);display:flex;align-items:center;justify-content:center;color:var(--ink-soft);cursor:pointer;padding:0;font-size:0.8rem;}
+  .chat-action-btn:active{transform:scale(0.93);}
+  .chat-action-btn svg{width:14px;height:14px;}
+  .chat-icon-spin{animation:chatSpin 0.8s linear infinite;}
+  @keyframes chatSpin{to{transform:rotate(360deg);}}
+
+  .chat-thinking-block{align-self:flex-start;max-width:80%;margin-bottom:2px;}
+  .chat-thinking-toggle{display:flex;align-items:center;gap:6px;font-size:0.78rem;color:var(--ink-soft);background:rgba(255,255,255,0.6);border:1px solid var(--line);border-radius:100px;padding:6px 12px;cursor:pointer;}
+  .chat-thinking-toggle svg{flex-shrink:0;}
+  .chat-thinking-chevron{transition:transform 0.2s;}
+  .chat-thinking-block.open .chat-thinking-chevron{transform:rotate(180deg);}
+  .chat-thinking-body{display:none;font-size:0.78rem;color:var(--ink-soft);line-height:1.5;background:rgba(255,255,255,0.5);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-top:6px;white-space:pre-wrap;}
+  .chat-thinking-block.open .chat-thinking-body{display:block;}
+
+  .chat-code-block{position:relative;background:#0F1A14;color:#E4F6EB;border-radius:12px;padding:14px;margin-top:8px;font-family:'IBM Plex Mono', monospace;font-size:0.8rem;overflow-x:auto;white-space:pre;}
+  .chat-copy-code-btn{position:absolute;top:8px;right:8px;font-size:0.7rem;font-weight:700;color:#E4F6EB;background:rgba(255,255,255,0.12);border:none;border-radius:8px;padding:5px 9px;cursor:pointer;}
+  .chat-input-row{margin-top:12px;display:flex;gap:8px;}
+  .chat-input-row input{flex:1;padding:13px 14px;border-radius:100px;border:1px solid var(--line);background:rgba(255,255,255,0.85);font-family:'Inter', sans-serif;font-size:0.9rem;color:var(--ink);outline:none;}
+  .chat-input-row input:focus{border-color:var(--green);box-shadow:0 0 0 3px var(--green-pale);}
+  .chat-send-btn{width:44px;height:44px;flex-shrink:0;border-radius:50%;border:none;background:linear-gradient(135deg, var(--green), var(--green-deep));color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 10px 22px var(--shadow);}
+  .chat-send-btn:active{transform:scale(0.94);}
+  .chat-icon-btn{width:40px;height:40px;flex-shrink:0;border-radius:50%;border:1px solid var(--line);background:rgba(255,255,255,0.85);color:var(--green-deep);display:flex;align-items:center;justify-content:center;cursor:pointer;}
+  .chat-icon-btn:active{transform:scale(0.94);}
+  .chat-icon-btn.mic-active{background:linear-gradient(135deg, var(--green), var(--green-deep));color:#fff;animation:pulse 1.4s infinite;}
+  .attach-menu-overlay{position:fixed;inset:0;background:rgba(20,32,25,0.35);z-index:950;opacity:0;pointer-events:none;transition:opacity 0.2s;}
+  .attach-menu-overlay.open{opacity:1;pointer-events:auto;}
+  .attach-menu{position:fixed;left:16px;bottom:0;width:min(260px,calc(100% - 32px));background:var(--white);border:1px solid var(--line);border-radius:18px 18px 0 0;z-index:951;padding:10px;box-shadow:0 -10px 30px rgba(15,122,61,0.18);transform:translateY(100%);transition:transform 0.25s ease;}
+  .attach-menu.open{transform:translateY(0);}
+  .attach-menu-item{display:flex;align-items:center;gap:12px;width:100%;padding:12px 10px;border:none;background:none;border-radius:12px;font-family:'Inter', sans-serif;font-size:0.9rem;font-weight:600;color:var(--ink);cursor:pointer;text-align:left;}
+  .attach-menu-item:active{background:var(--green-pale);}
+  .attach-menu-icon{width:34px;height:34px;flex-shrink:0;border-radius:50%;background:var(--green-pale);color:var(--green-deep);display:flex;align-items:center;justify-content:center;}
+  .chat-attach-preview{display:flex;align-items:center;gap:10px;padding:8px 14px;margin-top:8px;background:var(--green-pale);border:1px solid var(--line);border-radius:14px;}
+  .chat-attach-preview img{width:36px;height:36px;object-fit:cover;border-radius:8px;flex-shrink:0;}
+  .chat-attach-preview-name{flex:1;font-size:0.78rem;color:var(--ink-soft);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .chat-attach-remove-btn{width:24px;height:24px;flex-shrink:0;border-radius:50%;border:none;background:rgba(255,255,255,0.8);color:var(--ink);display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;}
+  .chat-voice-row{display:flex;align-items:center;gap:8px;padding:8px 16px;flex-wrap:wrap;}
+  .chat-voice-label{font-size:0.75rem;color:var(--ink-soft);}
+
+  .voice-overlay{position:fixed;inset:0;background:#0B140E;z-index:1000;display:none;flex-direction:column;align-items:center;justify-content:space-between;padding:24px 20px 40px;}
+  .voice-overlay.open{display:flex;}
+  .voice-overlay-header{width:100%;display:flex;align-items:center;justify-content:center;padding-top:8px;}
+  .voice-overlay-title{font-family:'Poppins', sans-serif;font-weight:700;font-size:0.95rem;color:#EAF7EF;background:rgba(255,255,255,0.08);padding:8px 18px;border-radius:100px;}
+  .voice-orb-wrap{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;}
+  .voice-orb{position:relative;width:180px;height:180px;border-radius:50%;}
+  .voice-orb::before,.voice-orb::after{content:'';position:absolute;inset:0;border-radius:50%;}
+  .voice-orb::before{background:radial-gradient(circle at 32% 30%, rgba(140,255,180,0.95), rgba(31,174,85,0.55) 45%, rgba(15,122,61,0.15) 72%);filter:blur(2px);animation:voiceOrbPulse 2.6s ease-in-out infinite;}
+  .voice-orb::after{background:radial-gradient(circle at 65% 70%, rgba(31,174,85,0.5), transparent 60%);mix-blend-mode:screen;animation:voiceOrbDrift 5s ease-in-out infinite;}
+  .voice-orb-glow{position:absolute;inset:-30px;border-radius:50%;background:radial-gradient(circle, rgba(31,174,85,0.35), transparent 70%);filter:blur(20px);animation:voiceOrbPulse 2.6s ease-in-out infinite;}
+  @keyframes voiceOrbPulse{0%,100%{transform:scale(1);opacity:0.9;}50%{transform:scale(1.08);opacity:1;}}
+  @keyframes voiceOrbDrift{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(-8px,6px) scale(1.05);}}
+  .voice-overlay.state-thinking .voice-orb::before{animation-duration:1s;}
+  .voice-overlay.state-thinking .voice-orb-glow{animation-duration:1s;}
+  .voice-overlay.state-speaking .voice-orb::before{animation-duration:0.7s;}
+  .voice-overlay.state-speaking .voice-orb-glow{animation-duration:0.7s;}
+  .voice-status-text{font-family:'Inter', sans-serif;font-size:0.85rem;color:rgba(234,247,239,0.7);letter-spacing:0.02em;}
+  .voice-overlay-controls{display:flex;align-items:center;gap:22px;}
+  .voice-end-btn{width:60px;height:60px;border-radius:50%;border:none;background:#fff;color:#0B140E;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 10px 26px rgba(0,0,0,0.4);}
+  .voice-end-btn:active{transform:scale(0.94);}
+
+  .chat-menu-btn{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--glass);display:flex;align-items:center;justify-content:center;color:var(--ink);cursor:pointer;}
+  .chat-temp-bar{padding:10px 16px 0;flex-shrink:0;}
+  .chat-temp-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:100px;border:1px solid var(--line);background:var(--green-pale);color:var(--green-deep);font-family:'Inter', sans-serif;font-size:0.78rem;font-weight:600;cursor:pointer;}
+  .sidebar-overlay{position:fixed;inset:0;background:rgba(20,32,25,0.45);z-index:900;opacity:0;pointer-events:none;transition:opacity 0.25s;}
+  .sidebar-overlay.open{opacity:1;pointer-events:auto;}
+  .sidebar-drawer{position:fixed;top:0;left:0;bottom:0;width:82%;max-width:300px;background:var(--white);z-index:901;transform:translateX(-100%);transition:transform 0.28s ease;display:flex;flex-direction:column;padding:18px 14px;box-shadow:8px 0 30px rgba(15,122,61,0.18);}
+  .sidebar-drawer.open{transform:translateX(0);}
+  .sidebar-header{display:flex;align-items:center;justify-content:space-between;padding:4px 6px 16px;}
+  .sidebar-title{font-family:'Poppins', sans-serif;font-weight:700;font-size:1.05rem;color:var(--green-deep);}
+  .sidebar-close-btn{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:var(--glass);display:flex;align-items:center;justify-content:center;color:var(--ink);cursor:pointer;}
+  .sidebar-item{display:flex;align-items:center;gap:10px;width:100%;padding:11px 12px;border-radius:12px;border:none;background:none;font-family:'Inter', sans-serif;font-size:0.9rem;font-weight:600;color:var(--ink);cursor:pointer;text-align:left;}
+  .sidebar-item:hover,.sidebar-item:active{background:var(--green-pale);}
+  .sidebar-item svg{flex-shrink:0;color:var(--green-deep);}
+  .form-group select{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,0.85);font-family:'Inter', sans-serif;font-size:0.9rem;color:var(--ink);outline:none;}
+  .profile-modal-overlay{position:fixed;inset:0;background:rgba(20,32,25,0.45);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:999;display:none;align-items:center;justify-content:center;padding:20px;overflow-y:auto;}
+  .profile-modal-overlay.show{display:flex;}
+  .profile-modal-card{background:var(--white);border:1px solid var(--glass-border);border-radius:24px;padding:26px 22px;max-width:380px;width:100%;box-shadow:0 30px 70px rgba(15,122,61,0.25);max-height:90vh;overflow-y:auto;}
+  .profile-modal-title{font-family:'Poppins', sans-serif;font-weight:700;font-size:1.15rem;margin-bottom:4px;}
+  .profile-modal-sub{font-size:0.82rem;color:var(--ink-soft);margin-bottom:18px;}
+  .profile-avatar-wrap{display:flex;flex-direction:column;align-items:center;gap:8px;margin-bottom:18px;}
+  .profile-avatar{width:88px;height:88px;border-radius:50%;object-fit:cover;border:2px solid var(--line);background:var(--green-pale);}
+  .profile-avatar-edit-btn{font-size:0.78rem;font-weight:700;color:var(--green-deep);background:var(--green-pale);border:none;border-radius:100px;padding:6px 14px;cursor:pointer;}
+  .profile-page-body{padding:20px 16px;}
+  .sidebar-section-label{font-family:'IBM Plex Mono', monospace;font-size:0.68rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--ink-soft);padding:16px 12px 6px;}
+  .sidebar-chat-list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:2px;}
+  .sidebar-empty{padding:10px 12px;font-size:0.82rem;color:var(--ink-soft);}
+  .sidebar-chat-item{display:flex;align-items:center;gap:6px;padding:9px 10px;border-radius:10px;cursor:pointer;}
+  .sidebar-chat-item:hover,.sidebar-chat-item.active{background:var(--green-pale);}
+  .sidebar-chat-title{flex:1;font-size:0.85rem;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .sidebar-chat-actions{display:flex;gap:2px;flex-shrink:0;}
+  .sidebar-chat-actions button{width:26px;height:26px;border:none;background:none;color:var(--ink-soft);cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:8px;}
+  .sidebar-chat-actions button:hover{background:rgba(31,174,85,0.15);color:var(--green-deep);}
+
+  .temp-chat-badge{font-size:0.68rem;font-weight:700;color:var(--gold);background:rgba(231,168,60,0.14);border:1px solid rgba(231,168,60,0.35);padding:5px 9px;border-radius:100px;}
+  .library-tabs{display:flex;gap:8px;padding:12px 16px 4px;flex-shrink:0;}
+  .library-tab{font-family:'Inter', sans-serif;font-size:0.82rem;font-weight:600;color:var(--ink-soft);background:var(--glass);border:1px solid var(--line);padding:8px 16px;border-radius:100px;cursor:pointer;}
+  .library-tab.active{background:linear-gradient(135deg, var(--green), var(--green-deep));color:#fff;border-color:transparent;}
+  .library-grid{flex:1;overflow-y:auto;padding:14px 16px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;align-content:start;}
+  .library-item{aspect-ratio:1;border-radius:14px;overflow:hidden;background:var(--glass);border:1px solid var(--glass-border);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;position:relative;}
+  .library-item img{width:100%;height:100%;object-fit:cover;}
+  .library-item-file{font-size:0.7rem;color:var(--ink-soft);padding:8px;text-align:center;word-break:break-word;}
+  .library-item-label{position:absolute;bottom:0;left:0;right:0;background:rgba(20,32,25,0.55);color:#fff;font-size:0.62rem;padding:4px 6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .project-item{display:flex;align-items:center;gap:10px;padding:14px;border-radius:14px;background:var(--glass);border:1px solid var(--glass-border);cursor:pointer;}
+  .project-item-name{font-family:'Poppins', sans-serif;font-weight:700;font-size:0.92rem;}
+  .project-chat-item{display:flex;align-items:center;padding:11px 10px;border-radius:12px;cursor:pointer;font-size:0.85rem;}
+  .project-chat-item:hover{background:var(--green-pale);}
+
+  .quote-card{margin-top:0;background:var(--glass);border:1px solid var(--glass-border);backdrop-filter:blur(14px);border-radius:18px;padding:18px;}
+  .quote-text{font-family:'Poppins', sans-serif;font-size:0.92rem;font-weight:500;line-height:1.5;font-style:italic;}
+  .quote-author{margin-top:12px;font-size:0.78rem;color:var(--ink-soft);font-weight:600;}
+  .quote-row{display:flex;flex-direction:column;gap:12px;margin-top:22px;}
+
+  .faq-item{margin-top:10px;background:var(--glass);border:1px solid var(--glass-border);backdrop-filter:blur(14px);border-radius:14px;padding:14px 16px;}
+  .faq-q{font-weight:700;font-size:0.87rem;font-family:'Poppins', sans-serif;}
+  .faq-a{font-size:0.83rem;color:var(--ink-soft);margin-top:6px;line-height:1.5;}
+
+  .final-cta{margin-top:50px;background:linear-gradient(135deg, var(--green), var(--green-deep));border-radius:24px;padding:30px 22px;text-align:center;box-shadow:0 24px 55px var(--shadow);}
+  .final-cta h2{font-family:'Poppins', sans-serif;color:#fff;font-size:1.4rem;font-weight:700;}
+  .final-cta p{color:rgba(255,255,255,0.88);font-size:0.87rem;margin-top:8px;}
+  .final-cta .btn-primary{background:#fff;color:var(--green-deep);margin-top:18px;box-shadow:0 10px 24px rgba(0,0,0,0.15);}
+
+  footer{margin-top:44px;text-align:center;font-size:0.76rem;color:var(--ink-soft);padding-bottom:10px;}
+  footer img{width:26px;height:26px;margin:0 auto 8px;display:block;}
+
+  #page-auth{display:none;}
+  .auth-back{display:flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:50%;color:var(--ink-soft);cursor:pointer;background:var(--glass);border:1px solid var(--glass-border);backdrop-filter:blur(14px);margin-top:22px;transition:background 0.2s,color 0.2s,transform 0.15s;}
+  .auth-back:hover{color:var(--green-deep);background:#fff;}
+  .auth-back:active{transform:scale(0.94);}
+  .auth-back:focus-visible{outline:2px solid var(--green);outline-offset:2px;}
+
+  .auth-hero{text-align:center;margin-top:24px;}
+  .auth-hero img{width:56px;height:56px;margin:0 auto 12px;display:block;}
+  .auth-hero h1{font-size:1.7rem;text-align:center;}
+  .auth-hero p{font-size:0.9rem;color:var(--ink-soft);margin-top:8px;}
+
+  .auth-card{margin-top:24px;background:var(--glass-strong);border:1px solid var(--glass-border);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border-radius:24px;padding:24px 22px;box-shadow:0 26px 60px var(--shadow), inset 0 1px 0 rgba(255,255,255,0.85);}
+
+  .tabs{display:flex;background:rgba(255,255,255,0.5);border-radius:14px;padding:4px;gap:4px;border:1px solid var(--line);}
+  .tab{flex:1;text-align:center;padding:10px;border-radius:11px;font-size:0.86rem;font-weight:700;color:var(--ink-soft);cursor:pointer;background:none;border:none;transition:background 0.2s,color 0.2s,box-shadow 0.2s;font-family:'Inter', sans-serif;}
+  .tab.active{background:#fff;color:var(--green-deep);box-shadow:0 4px 14px var(--shadow);}
+  .tab:focus-visible{outline:2px solid var(--green);outline-offset:2px;}
+
+  .form-group{margin-top:16px;}
+  .hidden{display:none !important;}
+  label{font-size:0.78rem;font-weight:700;color:var(--ink-soft);display:block;margin-bottom:6px;}
+  input[type="text"],input[type="email"],input[type="password"]{width:100%;padding:13px 14px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,0.85);font-family:'Inter', sans-serif;font-size:0.92rem;color:var(--ink);outline:none;transition:border-color 0.2s,box-shadow 0.2s;}
+  input::placeholder{color:#9BAA9F;}
+  input:focus{border-color:var(--green);box-shadow:0 0 0 3px var(--green-pale);}
+
+  .field-stack{display:flex;flex-direction:column;gap:14px;margin-top:4px;}
+
+  .submit-btn{width:100%;margin-top:20px;padding:15px;border-radius:13px;border:none;background:linear-gradient(135deg, var(--green), var(--green-deep));color:#fff;font-weight:700;font-size:0.94rem;cursor:pointer;box-shadow:0 14px 28px var(--shadow);transition:transform 0.15s,box-shadow 0.15s;}
+  .submit-btn:hover{transform:translateY(-1px);box-shadow:0 18px 34px var(--shadow);}
+  .submit-btn:active{transform:scale(0.98);}
+  .submit-btn:focus-visible{outline:2px solid var(--green-deep);outline-offset:3px;}
+
+  .auth-note{text-align:center;font-size:0.78rem;color:var(--ink-soft);margin-top:14px;}
+  .auth-note a{color:var(--green-deep);font-weight:700;text-decoration:none;}
+
+  .app-wrap{padding-bottom:120px;}
+
+  .app-nav{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);display:flex;gap:6px;background:rgba(255,255,255,0.75);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.9);border-radius:100px;padding:8px;box-shadow:0 20px 50px rgba(15,122,61,0.18), inset 0 1px 0 rgba(255,255,255,0.9);z-index:500;}
+  .nav-tab{display:flex;align-items:center;gap:7px;padding:12px;border-radius:100px;border:none;background:none;cursor:pointer;color:#9BAA9F;transition:all 0.3s cubic-bezier(0.4,0,0.2,1);}
+  .nav-tab svg{width:22px;height:22px;flex-shrink:0;}
+  .nav-tab span{font-family:'Inter', sans-serif;font-weight:700;font-size:0.85rem;white-space:nowrap;max-width:0;overflow:hidden;opacity:0;transition:max-width 0.3s ease, opacity 0.2s ease;}
+  .nav-tab.active{background:var(--green-pale);color:var(--green-deep);padding:12px 18px;box-shadow:inset 0 0 0 1px rgba(31,174,85,0.25);}
+  .nav-tab.active svg{filter:drop-shadow(0 0 6px rgba(31,174,85,0.35));}
+  .nav-tab.active span{max-width:120px;opacity:1;}
+  .nav-tab:focus-visible{outline:2px solid var(--green);outline-offset:2px;}
+
+  .popup-overlay{position:fixed;inset:0;background:rgba(20,32,25,0.35);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:999;display:none;align-items:center;justify-content:center;padding:24px;opacity:0;transition:opacity 0.25s ease;}
+  .popup-overlay.show{display:flex;opacity:1;}
+  .popup-card{background:var(--glass-strong);border:1px solid var(--glass-border);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-radius:26px;padding:32px 26px;max-width:340px;width:100%;text-align:center;box-shadow:0 30px 70px rgba(15,122,61,0.25), inset 0 1px 0 rgba(255,255,255,0.9);transform:scale(0.85) translateY(20px);opacity:0;transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s ease;}
+  .popup-overlay.show .popup-card{transform:scale(1) translateY(0);opacity:1;}
+  .popup-icon{width:64px;height:64px;margin:0 auto 16px;border-radius:50%;background:linear-gradient(135deg, var(--green), var(--green-deep));color:#fff;font-size:1.8rem;display:flex;align-items:center;justify-content:center;box-shadow:0 14px 30px var(--shadow);}
+  .popup-icon.error{background:linear-gradient(135deg, #E15B5B, #B93838);box-shadow:0 14px 30px rgba(185,56,56,0.25);}
+  .popup-title{font-family:'Poppins', sans-serif;font-weight:700;font-size:1.2rem;color:var(--ink);}
+  .popup-message{font-size:0.88rem;color:var(--ink-soft);margin-top:8px;line-height:1.5;}
+  .popup-btn{margin-top:20px;width:100%;padding:13px;border-radius:13px;border:none;background:linear-gradient(135deg, var(--green), var(--green-deep));color:#fff;font-weight:700;font-size:0.9rem;cursor:pointer;box-shadow:0 12px 24px var(--shadow);}
+  .popup-btn:active{transform:scale(0.97);}
+
+  @media (max-width:380px){
+    h1{font-size:2rem;}
+    .feature-grid{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+  <div class="popup-overlay" id="popup-overlay" onclick="closePopup(event)">
+    <div class="popup-card" id="popup-card">
+      <div class="popup-icon" id="popup-icon">✓</div>
+      <div class="popup-title" id="popup-title">Success</div>
+      <div class="popup-message" id="popup-message">Message goes here</div>
+      <button class="popup-btn" onclick="closePopup(event)">Continue</button>
+    </div>
+  </div>
+
+  <div class="profile-modal-overlay" id="profile-modal-overlay">
+    <div class="profile-modal-card">
+      <div class="profile-modal-title">Complete your profile</div>
+      <div class="profile-modal-sub" id="profile-modal-sub">We need a few details so PrepMate can tailor questions to you.</div>
+      <div class="field-stack">
+        <div class="form-group" id="pm-age-group">
+          <label for="pm-age">Age</label>
+          <input type="number" id="pm-age" min="3" placeholder="e.g. 14">
+        </div>
+        <div class="form-group" id="pm-country-group">
+          <label for="pm-country">Country</label>
+          <select id="pm-country" onchange="onProfileCountryChange()">
+            <option value="">Select country</option>
+            <option value="Nigeria">Nigeria</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="form-group" id="pm-ngclass-group" style="display:none;">
+          <label for="pm-ngclass">Class</label>
+          <select id="pm-ngclass" onchange="onProfileClassChange()"></select>
+        </div>
+        <div class="form-group" id="pm-department-group" style="display:none;">
+          <label for="pm-department">Department</label>
+          <select id="pm-department">
+            <option value="">Select department</option>
+            <option value="Science">Science</option>
+            <option value="Art">Art</option>
+            <option value="Commercial">Commercial</option>
+          </select>
+        </div>
+        <div class="form-group" id="pm-otherclass-group" style="display:none;">
+          <label for="pm-otherclass">Class / Grade</label>
+          <input type="text" id="pm-otherclass" placeholder="e.g. Grade 9">
+        </div>
+        <button type="button" class="submit-btn" onclick="saveProfileCompletion()">Save and continue</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+
+  <div class="wrap" id="page-landing">
+
+    <nav>
+      <div class="logo">
+        <img src="https://i.postimg.cc/598ryK8R/file-00000000fa2481f49fe6fb6edb289b08.png" alt="PrepMate logo">
+        <span class="logo-text">Prep<span class="mate">Mate</span></span>
+      </div>
+      <a href="#" class="nav-link" onclick="showPage('auth','login'); return false;">Sign in</a>
+    </nav>
+
+    <div class="eyebrow"><span class="eyebrow-dot"></span> Powered by AI, personalized for you</div>
+
+    <h1>Study the parts you <span class="accent">actually</span> get wrong.</h1>
+
+    <p class="subhead">PrepMate is an AI study partner that watches where you struggle and quietly rebuilds every quiz around it — so your revision time goes to the topics that need it, not the ones you've already mastered.</p>
+
+    <div class="cta-row">
+      <button class="btn btn-primary" onclick="showPage('auth','signup')">Get started free</button>
+      <a href="#how" class="btn btn-ghost">See how it works</a>
+    </div>
+
+    <div class="demo-card">
+      <div class="demo-label">
+        <span>Live from Chemistry · Mole Concept</span>
+        <span class="live-pulse"></span>
+      </div>
+      <div class="demo-question">How many moles are in 22g of CO₂? (Molar mass = 44g/mol)</div>
+      <div class="demo-options">
+        <div class="demo-opt">0.25 mol</div>
+        <div class="demo-opt correct">0.5 mol — correct</div>
+        <div class="demo-opt">2 mol</div>
+      </div>
+      <div class="demo-footnote">↳ PrepMate flagged this as your weak spot 3 sessions ago</div>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="stat-num">1-on-1</div><div class="stat-label">AI adapts per student</div></div>
+      <div class="stat"><div class="stat-num">24/7</div><div class="stat-label">Practice anytime</div></div>
+      <div class="stat"><div class="stat-num">Free</div><div class="stat-label">No card required</div></div>
+    </div>
+
+    <section>
+      <div class="section-eyebrow">The problem</div>
+      <h2 class="section-title">Most revision is a guessing game</h2>
+      <p class="section-sub">Textbooks and past questions don't know what YOU personally struggle with. So you end up re-reading chapters you already understand, while your actual weak spots stay untouched until exam day.</p>
+
+      <div class="problem-list">
+        <div class="problem-item">
+          <div class="problem-icon">📚</div>
+          <div class="problem-text"><strong>Generic past questions</strong> treat every student the same — no matter what you've already mastered.</div>
+        </div>
+        <div class="problem-item">
+          <div class="problem-icon">⏳</div>
+          <div class="problem-text"><strong>Limited study time</strong> gets wasted on topics you're already strong in, just because they're next in the textbook.</div>
+        </div>
+        <div class="problem-item">
+          <div class="problem-icon">❓</div>
+          <div class="problem-text"><strong>Wrong answers</strong> in most apps just show a red X — with no explanation of why, or how to actually fix the gap.</div>
+        </div>
+        <div class="problem-item">
+          <div class="problem-icon">💸</div>
+          <div class="problem-text"><strong>Private tutors</strong> who could personalize your prep are expensive and out of reach for most students.</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="how">
+      <div class="section-eyebrow">The solution</div>
+      <h2 class="section-title">How PrepMate works</h2>
+      <p class="section-sub">Four simple steps, and it gets sharper about you every single time.</p>
+
+      <div class="step-list">
+        <div class="step">
+          <div class="step-icon">1</div>
+          <div>
+            <div class="step-title">Pick a subject & topic</div>
+            <div class="step-desc">Chemistry, Biology, Physics, Maths, English — whatever you're prepping for. PrepMate's AI generates fresh, exam-style practice questions on the spot, not from a fixed question bank.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-icon">2</div>
+          <div>
+            <div class="step-title">Answer & get real feedback</div>
+            <div class="step-desc">Wrong answers come with a plain-language explanation of exactly where your reasoning went off — not just a red X. Right answers get reinforced so they stick.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-icon">3</div>
+          <div>
+            <div class="step-title">Watch your weak spots shrink</div>
+            <div class="step-desc">Every session, PrepMate leans harder into the topics you're still shaky on, and eases off the ones you've mastered — so no session feels like a repeat.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-icon">4</div>
+          <div>
+            <div class="step-title">Track your progress over time</div>
+            <div class="step-desc">A simple dashboard shows exactly which topics are improving, which are stuck, and what to focus on before your next study session.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-eyebrow">What's inside</div>
+      <h2 class="section-title">Built to actually help you improve</h2>
+      <p class="section-sub">Every feature exists to answer one question: what should you study next?</p>
+
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-emoji">🧠</div>
+          <div class="feature-title">Adaptive difficulty</div>
+          <div class="feature-desc">Questions get harder or easier automatically based on how you're performing.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-emoji">📊</div>
+          <div class="feature-title">Weak-topic tracking</div>
+          <div class="feature-desc">Every wrong answer is logged and prioritized in your next session.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-emoji">💬</div>
+          <div class="feature-title">Plain-language explanations</div>
+          <div class="feature-desc">No jargon — just clear reasoning for why an answer is right or wrong.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-emoji">🔥</div>
+          <div class="feature-title">Study streaks</div>
+          <div class="feature-desc">Stay consistent with simple, motivating daily streaks.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-emoji">🎯</div>
+          <div class="feature-title">Exam-style questions</div>
+          <div class="feature-desc">Formatted the way WAEC and JAMB actually test you, not generic trivia.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-emoji">📱</div>
+          <div class="feature-title">Works on any device</div>
+          <div class="feature-desc">No app to download — study from your phone, anywhere, anytime.</div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-eyebrow">Coverage</div>
+      <h2 class="section-title">Subjects PrepMate supports</h2>
+      <p class="section-sub">Starting with core subjects, with more added as we grow.</p>
+      <div class="chip-row">
+        <div class="chip">Chemistry</div>
+        <div class="chip">Physics</div>
+        <div class="chip">Biology</div>
+        <div class="chip">Mathematics</div>
+        <div class="chip">English Language</div>
+        <div class="chip">Economics</div>
+        <div class="chip">Government</div>
+        <div class="chip">Literature</div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-eyebrow">Why it matters</div>
+      <h2 class="section-title">What personalized prep actually feels like</h2>
+      <div class="quote-row">
+        <div class="quote-card">
+          <div class="quote-text">"Instead of drowning in a 500-page textbook, I only study what I'm actually getting wrong. It's the closest thing to having a personal tutor."</div>
+          <div class="quote-author">— Early tester, high school student</div>
+        </div>
+        <div class="quote-card">
+          <div class="quote-text">"The explanations actually make sense. I'm not just memorizing answers anymore, I understand why they're right."</div>
+          <div class="quote-author">— Early tester, university applicant</div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-eyebrow">Questions</div>
+      <h2 class="section-title">Frequently asked</h2>
+      <div class="faq-item">
+        <div class="faq-q">Is PrepMate really free?</div>
+        <div class="faq-a">Yes — no card required to get started. Just sign up and start studying.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">What subjects does it cover?</div>
+        <div class="faq-a">PrepMate covers core school subjects to start, with more being added as we grow.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Do I need to download an app?</div>
+        <div class="faq-a">No — PrepMate runs right in your browser, on any phone or computer.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">How does it know what I'm weak at?</div>
+        <div class="faq-a">Every question you answer is tracked. Topics you get wrong more often are automatically prioritized in future sessions.</div>
+      </div>
+    </section>
+
+    <div class="final-cta">
+      <h2>Ready to study smarter?</h2>
+      <p>Join PrepMate and let AI show you exactly what to focus on next.</p>
+      <button class="btn btn-primary" onclick="showPage('auth','signup')">Get started free</button>
+    </div>
+
+    <footer>
+      <img src="https://i.postimg.cc/598ryK8R/file-00000000fa2481f49fe6fb6edb289b08.png" alt="PrepMate logo">
+      PrepMate — built for the July AI Challenge
+    </footer>
+
+  </div>
+
+  <div class="wrap" id="page-auth">
+
+    <button class="auth-back" onclick="showPage('landing')" aria-label="Back">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+
+    <div class="auth-hero">
+      <img src="https://i.postimg.cc/598ryK8R/file-00000000fa2481f49fe6fb6edb289b08.png" alt="PrepMate logo">
+      <h1>Let's get you set up</h1>
+      <p>Create your account, or log back in to keep studying.</p>
+    </div>
+
+    <div class="auth-card">
+      <div class="tabs" role="tablist">
+        <button class="tab active" id="tab-signup" role="tab" aria-selected="true" onclick="switchAuthTab('signup')">Sign up</button>
+        <button class="tab" id="tab-login" role="tab" aria-selected="false" onclick="switchAuthTab('login')">Log in</button>
+      </div>
+
+      <form id="signup-form" class="field-stack" style="margin-top:16px;">
+        <div class="form-group">
+          <label for="su-name">Full name</label>
+          <input type="text" id="su-name" placeholder="e.g. Amaka Obi" required>
+        </div>
+        <div class="form-group">
+          <label for="su-email">Email</label>
+          <input type="email" id="su-email" placeholder="you@example.com" required>
+        </div>
+        <div class="form-group">
+          <label for="su-password">Password</label>
+          <input type="password" id="su-password" placeholder="At least 6 characters" required>
+        </div>
+        <button type="submit" class="submit-btn">Create account</button>
+      </form>
+
+      <form id="login-form" class="field-stack hidden" style="margin-top:16px;">
+        <div class="form-group">
+          <label for="li-email">Email</label>
+          <input type="email" id="li-email" placeholder="you@example.com" required>
+        </div>
+        <div class="form-group">
+          <label for="li-password">Password</label>
+          <input type="password" id="li-password" placeholder="Your password" required>
+        </div>
+        <button type="submit" class="submit-btn">Log in</button>
+      </form>
+
+      <div class="auth-note" id="auth-toggle-note">
+        Already have an account? <a href="#" onclick="switchAuthTab('login'); return false;">Log in</a>
+      </div>
+    </div>
+
+    <footer>
+      <img src="https://i.postimg.cc/598ryK8R/file-00000000fa2481f49fe6fb6edb289b08.png" alt="PrepMate logo">
+      PrepMate — built for the July AI Challenge
+    </footer>
+
+  </div>
+
+  <div class="wrap app-wrap" id="page-app" style="display:none;">
+
+    <div class="app-content active-content" id="content-home">
+      <div class="eyebrow" style="margin-top:26px;"><span class="eyebrow-dot"></span> Welcome back</div>
+      <h1 style="font-size:1.9rem;">Ready to close a few gaps today?</h1>
+      <p class="subhead">Your Home dashboard will live here — streak, weak topics, and a quick "continue studying" button.</p>
+    </div>
+
+    <div class="app-content" id="content-practice" style="display:none;">
+      <div class="eyebrow" style="margin-top:26px;"><span class="eyebrow-dot"></span> Practice</div>
+      <h1 style="font-size:1.9rem;">Pick a subject to start.</h1>
+      <p class="subhead">PrepMate will generate a fresh question every time.</p>
+
+      <button class="btn btn-primary" style="margin-top:20px;width:100%;justify-content:center;gap:8px;" onclick="openChatPage()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Ask AI
+      </button>
+
+      <div id="quiz-mode" style="margin-top:24px;">
+      <div class="chip-row" id="subject-picker">
+        <button class="chip chip-btn selected" onclick="startQuiz('General')">General</button>
+        <button class="chip chip-btn" onclick="startQuiz('Chemistry')">Chemistry</button>
+        <button class="chip chip-btn" onclick="startQuiz('Physics')">Physics</button>
+        <button class="chip chip-btn" onclick="startQuiz('Biology')">Biology</button>
+        <button class="chip chip-btn" onclick="startQuiz('Mathematics')">Mathematics</button>
+        <button class="chip chip-btn" onclick="startQuiz('English Language')">English Language</button>
+        <button class="chip chip-btn" onclick="startQuiz('Economics')">Economics</button>
+        <button class="chip chip-btn" onclick="startQuiz('Government')">Government</button>
+        <button class="chip chip-btn" onclick="startQuiz('Literature')">Literature</button>
+      </div>
+
+      <div class="quiz-card" id="quiz-card">
+        <div class="demo-label">
+          <span id="quiz-subject-label">General Knowledge</span>
+          <span id="quiz-loading" style="display:none;">Thinking...</span>
+        </div>
+        <div class="demo-question" id="quiz-question">Loading question...</div>
+        <div class="demo-options" id="quiz-options"></div>
+        <div class="quiz-explanation" id="quiz-explanation" style="display:none;"></div>
+        <button class="submit-btn" id="quiz-next-btn" style="display:none;" onclick="loadQuestion()">Next question</button>
+      </div>
+      </div>
+    </div>
+
+    <div class="app-content" id="content-progress" style="display:none;">
+      <div class="eyebrow" style="margin-top:26px;"><span class="eyebrow-dot"></span> Progress</div>
+      <h1 style="font-size:1.9rem;">See where you're improving.</h1>
+      <p class="subhead">Charts and weak-topic history will live here.</p>
+    </div>
+
+    <div class="app-content" id="content-profile" style="display:none;">
+      <div class="eyebrow" style="margin-top:26px;"><span class="eyebrow-dot"></span> Profile</div>
+      <h1 style="font-size:1.9rem;">Your account.</h1>
+      <p class="subhead">Account details and logout will live here.</p>
+    </div>
+
+  </div>
+
+  <nav class="app-nav" id="app-nav" style="display:none;">
+    <button class="nav-tab active" onclick="switchAppTab('home', this)" aria-label="Home">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
+      <span>Home</span>
+    </button>
+    <button class="nav-tab" onclick="switchAppTab('practice', this)" aria-label="Practice">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="0.5"/></svg>
+      <span>Practice</span>
+    </button>
+    <button class="nav-tab" onclick="switchAppTab('progress', this)" aria-label="Progress">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V9"/><path d="M12 19V5"/><path d="M20 19v-7"/></svg>
+      <span>Progress</span>
+    </button>
+    <button class="nav-tab" onclick="switchAppTab('profile', this)" aria-label="Profile">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>
+      <span>Profile</span>
+    </button>
+  </nav>
+
+  <div class="chat-page" id="page-chat" style="display:none;">
+    <div class="chat-page-header">
+      <button class="chat-back-btn" onclick="closeChatPage()" aria-label="Back">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <span class="chat-page-title">PrepMate AI</span>
+      <button class="chat-menu-btn" onclick="openSidebar()" aria-label="Menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+      </button>
+    </div>
+
+    <div class="chat-temp-bar">
+      <button class="chat-temp-btn" onclick="openTempChat()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c-4 0-7 3-7 7v8l3-2 2 2 2-2 2 2 2-2 3 2v-8c0-4-3-7-7-7z"/><circle cx="9" cy="11" r="1"/><circle cx="15" cy="11" r="1"/></svg>
+        Temporary chat
+      </button>
+    </div>
+    <div class="chat-voice-row" id="chat-voice-row">
+      <span class="chat-voice-label">PrepMate's voice:</span>
+      <button class="chip chip-btn selected" id="voice-btn-austin" onclick="setVoice('austin', this)">Austin (M)</button>
+      <button class="chip chip-btn" id="voice-btn-hannah" onclick="setVoice('hannah', this)">Hannah (F)</button>
+    </div>
+    <div class="chat-window" id="chat-window">
+      <div class="chat-bubble chat-ai">Hi! I'm your PrepMate AI tutor. Ask me anything you're studying.</div>
+    </div>
+
+    <div class="chat-attach-preview" id="chat-attach-preview" style="display:none;">
+      <img id="chat-attach-preview-img" src="" alt="">
+      <span id="chat-attach-preview-name" class="chat-attach-preview-name"></span>
+      <button class="chat-attach-remove-btn" onclick="removeAttachment()" aria-label="Remove attachment">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18"/><path d="M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="chat-input-row">
+      <input type="file" id="chat-upload-camera" accept="image/*" capture="environment" style="display:none;" onchange="handleImageUpload(this)">
+      <input type="file" id="chat-upload-photos" accept="image/jpeg,image/jpg,image/png" style="display:none;" onchange="handleImageUpload(this)">
+      <input type="file" id="chat-upload-files" accept="image/jpeg,image/jpg,image/png,.pdf" style="display:none;" onchange="handleImageUpload(this)">
+      <button class="chat-icon-btn" onclick="toggleAttachMenu()" aria-label="Attach">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+      </button>
+      <div class="attach-menu-overlay" id="attach-menu-overlay" onclick="closeAttachMenu()"></div>
+      <div class="attach-menu" id="attach-menu">
+        <button class="attach-menu-item" onclick="pickAttach('chat-upload-camera')">
+          <span class="attach-menu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></span>
+          Camera
+        </button>
+        <button class="attach-menu-item" onclick="pickAttach('chat-upload-photos')">
+          <span class="attach-menu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg></span>
+          Photos
+        </button>
+        <button class="attach-menu-item" onclick="pickAttach('chat-upload-files')">
+          <span class="attach-menu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></span>
+          Files
+        </button>
+      </div>
+      <button class="chat-icon-btn" id="mic-btn" onclick="toggleVoiceMode()" aria-label="Voice chat">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+      </button>
+      <input type="text" id="chat-input" placeholder="Ask a question..." onkeydown="if(event.key==='Enter') sendChatMessage();">
+      <button class="chat-send-btn" onclick="sendChatMessage()" aria-label="Send">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="voice-overlay" id="voice-overlay">
+    <div class="voice-overlay-header">
+      <span class="voice-overlay-title">PrepMate Voice</span>
+    </div>
+    <div class="voice-orb-wrap">
+      <div class="voice-orb">
+        <div class="voice-orb-glow"></div>
+      </div>
+      <span class="voice-status-text" id="voice-status-text">Listening...</span>
+    </div>
+    <div class="voice-overlay-controls">
+      <button class="voice-end-btn" onclick="closeVoiceOverlay()" aria-label="End voice chat">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18"/><path d="M6 6l12 12"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+  <div class="sidebar-drawer" id="sidebar-drawer">
+    <div class="sidebar-header">
+      <span class="sidebar-title">PrepMate</span>
+      <button class="sidebar-close-btn" onclick="closeSidebar()" aria-label="Close menu">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18"/><path d="M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <button class="sidebar-item sidebar-item-primary" onclick="startNewChat()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+      New chat
+    </button>
+    <button class="sidebar-item" onclick="openLibrary()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/><path d="M9 9v11"/></svg>
+      Library
+    </button>
+    <button class="sidebar-item" onclick="openProjects()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l4-4h5l2 2h7v13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/></svg>
+      Projects
+    </button>
+    <button class="sidebar-item" onclick="openProfilePage()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a8 8 0 0 1 16 0v1"/></svg>
+      Profile
+    </button>
+    <div class="sidebar-section-label">Chats</div>
+    <div class="sidebar-chat-list" id="sidebar-chat-list">
+      <div class="sidebar-empty">No chats yet</div>
+    </div>
+  </div>
+
+  <div class="chat-page" id="page-temp-chat" style="display:none;">
+    <div class="chat-page-header">
+      <button class="chat-back-btn" onclick="closeTempChatPage()" aria-label="Back">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <span class="chat-page-title">Temporary chat</span>
+      <span class="temp-chat-badge">30-day auto-delete</span>
+    </div>
+    <div class="chat-window" id="temp-chat-window">
+      <div class="chat-bubble chat-ai">This is a temporary chat. It won't appear in your chat history and deletes itself after 30 days.</div>
+    </div>
+    <div class="chat-input-row">
+      <input type="text" id="temp-chat-input" placeholder="Ask a question..." onkeydown="if(event.key==='Enter') sendTempChatMessage();">
+      <button class="chat-send-btn" onclick="sendTempChatMessage()" aria-label="Send">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="chat-page" id="page-library" style="display:none;">
+    <div class="chat-page-header">
+      <button class="chat-back-btn" onclick="closeLibraryPage()" aria-label="Back">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <span class="chat-page-title">Library</span>
+      <span style="width:38px;"></span>
+    </div>
+    <div class="library-tabs">
+      <button class="library-tab active" onclick="switchLibraryTab('all', this)">All</button>
+      <button class="library-tab" onclick="switchLibraryTab('image', this)">Images</button>
+      <button class="library-tab" onclick="switchLibraryTab('file', this)">Files</button>
+    </div>
+    <div class="library-grid" id="library-grid">
+      <div class="sidebar-empty">Loading...</div>
+    </div>
+  </div>
+
+  <div class="chat-page" id="page-profile" style="display:none;">
+    <div class="chat-page-header">
+      <button class="chat-back-btn" onclick="closeProfilePage()" aria-label="Back">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <span class="chat-page-title">Profile</span>
+      <span style="width:38px;"></span>
+    </div>
+    <div class="profile-page-body">
+      <div class="profile-avatar-wrap">
+        <img class="profile-avatar" id="pp-avatar-img" src="https://i.postimg.cc/598ryK8R/file-00000000fa2481f49fe6fb6edb289b08.png" alt="Profile picture">
+        <input type="file" id="pp-avatar-input" accept="image/jpeg,image/jpg,image/png" style="display:none;" onchange="handleProfilePicUpload(this)">
+        <button class="profile-avatar-edit-btn" onclick="document.getElementById('pp-avatar-input').click()">Change photo</button>
+      </div>
+      <div class="field-stack">
+        <div class="form-group">
+          <label for="pp-name">Full name</label>
+          <input type="text" id="pp-name">
+        </div>
+        <div class="form-group">
+          <label for="pp-age">Age</label>
+          <input type="number" id="pp-age" min="3">
+        </div>
+        <div class="form-group">
+          <label for="pp-country">Country</label>
+          <select id="pp-country" onchange="onEditCountryChange()">
+            <option value="Nigeria">Nigeria</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="form-group" id="pp-ngclass-group">
+          <label for="pp-ngclass">Class</label>
+          <select id="pp-ngclass" onchange="onEditClassChange()"></select>
+        </div>
+        <div class="form-group" id="pp-department-group" style="display:none;">
+          <label for="pp-department">Department</label>
+          <select id="pp-department">
+            <option value="">Select department</option>
+            <option value="Science">Science</option>
+            <option value="Art">Art</option>
+            <option value="Commercial">Commercial</option>
+          </select>
+        </div>
+        <div class="form-group" id="pp-otherclass-group" style="display:none;">
+          <label for="pp-otherclass">Class / Grade</label>
+          <input type="text" id="pp-otherclass">
+        </div>
+        <button type="button" class="submit-btn" onclick="saveProfileEdits()">Save changes</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="chat-page" id="page-projects" style="display:none;">
+    <div class="chat-page-header">
+      <button class="chat-back-btn" onclick="closeProjectsPage()" aria-label="Back">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <span class="chat-page-title">Projects</span>
+      <button class="chat-menu-btn" onclick="promptCreateProject()" aria-label="New project">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+      </button>
+    </div>
+    <div class="library-grid" id="projects-list" style="display:flex;flex-direction:column;gap:8px;padding:14px 16px;">
+      <div class="sidebar-empty">Loading...</div>
+    </div>
+  </div>
+
+  <div class="chat-page" id="page-project-view" style="display:none;">
+    <div class="chat-page-header">
+      <button class="chat-back-btn" onclick="closeProjectView()" aria-label="Back">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <span class="chat-page-title" id="project-view-title">Project</span>
+      <button class="chat-menu-btn" onclick="startNewProjectChat()" aria-label="New chat in project">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+      </button>
+    </div>
+    <div class="sidebar-chat-list" id="project-chat-list" style="padding:6px 10px;">
+      <div class="sidebar-empty">Loading...</div>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyD2Z3QnFJqXqePyL_cl63uzn0d-xJRipU4",
+      authDomain: "prepmate-7683f.firebaseapp.com",
+      projectId: "prepmate-7683f",
+      storageBucket: "prepmate-7683f.firebasestorage.app",
+      messagingSenderId: "639119710209",
+      appId: "1:639119710209:web:cba021ea1129cf4ffec800"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+  </script>
+
+  <script>
+    const API_BASE = "https://prepmateon.up.railway.app";
+
+    const NG_CLASSES = ['Nursery 1','Nursery 2','Primary 1','Primary 2','Primary 3','Primary 4','Primary 5','Primary 6','JSS1','JSS2','JSS3','SSS1','SSS2','SSS3'];
+    function ngNeedsDepartment(cls){ return cls === 'SSS1' || cls === 'SSS2' || cls === 'SSS3'; }
+    function getNigerianSession(d){
+      d = d || new Date();
+      const y = d.getFullYear();
+      const m = d.getMonth();
+      return m >= 8 ? (y + '/' + (y + 1)) : ((y - 1) + '/' + y);
+    }
+    function promoteNigerianClass(cls){
+      const idx = NG_CLASSES.indexOf(cls);
+      if(idx === -1 || idx === NG_CLASSES.length - 1) return cls;
+      return NG_CLASSES[idx + 1];
+    }
+    function checkClassPromotion(uid){
+      const ref = db.collection('users').doc(uid);
+      ref.get().then(doc => {
+        if(!doc.exists) return;
+        const data = doc.data();
+        if(data.country !== 'Nigeria' || !data.ngClass) return;
+        const currentSession = getNigerianSession();
+        if(data.classSession === currentSession) return;
+        const wasSS = ngNeedsDepartment(data.ngClass);
+        const newClass = promoteNigerianClass(data.ngClass);
+        const nowSS = ngNeedsDepartment(newClass);
+        const update = { ngClass: newClass, classSession: currentSession };
+        if(nowSS && !wasSS) update.department = null;
+        ref.update(update).then(() => {
+          if(nowSS && !wasSS){
+            showPopup('Class updated', 'You are now in ' + newClass + '. Please select your department.', false);
+            openProfileModal({ ...data, ...update }, true);
+          }
+        });
+      }).catch(err => console.error('Class promotion check failed:', err));
+    }
+
+    let userProfile = null;
+
+    function loadUserProfileCache(uid){
+      db.collection('users').doc(uid).get().then(doc => {
+        if(doc.exists) userProfile = doc.data();
+      }).catch(err => console.error('Failed to load profile cache:', err));
+    }
+
+    function buildProfilePayload(){
+      if(!userProfile) return null;
+      return {
+        country: userProfile.country || null,
+        ngClass: userProfile.ngClass || null,
+        department: userProfile.department || null,
+        otherClass: userProfile.otherClass || null
+      };
+    }
+
+    if(window.visualViewport){
+      const vv = window.visualViewport;
+      function handleViewportResize(){
+        document.querySelectorAll('.chat-page').forEach(page => {
+          if(page.style.display !== 'none'){
+            page.style.height = vv.height + 'px';
+          }
+        });
+        const active = document.activeElement;
+        if(active && (active.id === 'chat-input' || active.id === 'temp-chat-input')){
+          active.scrollIntoView({ block: 'end', behavior: 'smooth' });
+        }
+      }
+      vv.addEventListener('resize', handleViewportResize);
+      vv.addEventListener('scroll', handleViewportResize);
+      ['chat-input','temp-chat-input'].forEach(id => {
+        const el = document.getElementById(id);
+        if(el) el.addEventListener('focus', () => setTimeout(handleViewportResize, 250));
+      });
+    }
+    let currentSubject = 'General';
+    let currentQuestion = null;
+
+    function startQuiz(subject){
+      currentSubject = subject;
+      document.querySelectorAll('#subject-picker .chip-btn').forEach(el => el.classList.remove('selected'));
+      event.target.classList.add('selected');
+      document.getElementById('quiz-card').style.display = 'block';
+      document.getElementById('quiz-subject-label').textContent = subject;
+      loadQuestion();
+    }
+
+    function loadQuestion(){
+      document.getElementById('quiz-loading').style.display = 'inline';
+      document.getElementById('quiz-question').textContent = 'Loading question...';
+      document.getElementById('quiz-options').innerHTML = '';
+      document.getElementById('quiz-explanation').style.display = 'none';
+      document.getElementById('quiz-next-btn').style.display = 'none';
+
+      fetch(API_BASE + '/api/generate-question', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ subject: currentSubject, profile: buildProfilePayload() })
+      })
+        .then(res => res.json())
+        .then(data => renderQuestion(data))
+        .catch(err => {
+          document.getElementById('quiz-loading').style.display = 'none';
+          document.getElementById('quiz-question').textContent = 'Failed to load question. Try again.';
+        });
+    }
+
+    function renderQuestion(data){
+      currentQuestion = data;
+      document.getElementById('quiz-loading').style.display = 'none';
+      document.getElementById('quiz-question').textContent = data.question;
+      const optionsDiv = document.getElementById('quiz-options');
+      optionsDiv.innerHTML = '';
+      data.options.forEach((opt, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'quiz-option-btn';
+        btn.textContent = opt;
+        btn.onclick = () => submitAnswer(i, btn);
+        optionsDiv.appendChild(btn);
+      });
+    }
+
+    loadQuestion();
+
+    function submitAnswer(selectedIndex, btnEl){
+      const buttons = document.querySelectorAll('.quiz-option-btn');
+      buttons.forEach(b => b.disabled = true);
+
+      const isCorrect = selectedIndex === currentQuestion.correctIndex;
+      btnEl.classList.add(isCorrect ? 'correct' : 'wrong');
+      if(!isCorrect){
+        buttons[currentQuestion.correctIndex].classList.add('correct');
+      }
+
+      const explanationDiv = document.getElementById('quiz-explanation');
+      explanationDiv.textContent = currentQuestion.explanation;
+      explanationDiv.style.display = 'block';
+      document.getElementById('quiz-next-btn').style.display = 'block';
+
+      if(isCorrect){
+        showPopup('Win 🎊', 'Check the explanation below for more details.', false);
+      } else {
+        showPopup('Miss ❌', 'Check the explanation below for the correct answer.', true);
+        logWeakTopic(currentSubject);
+      }
+    }
+
+    function logWeakTopic(subject){
+      const user = auth.currentUser;
+      if(!user) return;
+      const key = 'weakTopics.' + subject.replace(/\./g, '_');
+      db.collection('users').doc(user.uid).update({
+        [key]: firebase.firestore.FieldValue.increment(1)
+      }).catch(err => console.error('Failed to log weak topic:', err));
+    }
+
+    let chatHistory = [];
+    let currentChatId = null;
+    let currentProjectId = null;
+    let tempChatHistory = [];
+    let tempChatDocId = null;
+    let currentLibraryTab = 'all';
+
+    function openChatPage(){
+      document.getElementById('page-chat').style.display = 'flex';
+      const cw = document.getElementById('chat-window');
+      cw.scrollTop = cw.scrollHeight;
+      adjustChatViewport();
+    }
+
+    function adjustChatViewport(){
+      const page = document.getElementById('page-chat');
+      if(page.style.display === 'none') return;
+      if(window.visualViewport){
+        page.style.height = window.visualViewport.height + 'px';
+        page.style.top = window.visualViewport.offsetTop + 'px';
+        const cw = document.getElementById('chat-window');
+        cw.scrollTop = cw.scrollHeight;
+      }
+    }
+    if(window.visualViewport){
+      window.visualViewport.addEventListener('resize', adjustChatViewport);
+      window.visualViewport.addEventListener('scroll', adjustChatViewport);
+    }
+
+    function closeChatPage(){
+      document.getElementById('page-chat').style.display = 'none';
+    }
+
+    function openSidebar(){
+      document.getElementById('sidebar-overlay').classList.add('open');
+      document.getElementById('sidebar-drawer').classList.add('open');
+      loadChatList();
+    }
+
+    function closeSidebar(){
+      document.getElementById('sidebar-overlay').classList.remove('open');
+      document.getElementById('sidebar-drawer').classList.remove('open');
+    }
+
+    function startNewChat(){
+      chatHistory = [];
+      currentChatId = null;
+      currentProjectId = null;
+      const cw = document.getElementById('chat-window');
+      cw.innerHTML = '<div class="chat-bubble chat-ai">Hi! I\'m your PrepMate AI tutor. Ask me anything you\'re studying.</div>';
+      closeSidebar();
+    }
+
+    function loadChatList(){
+      const user = auth.currentUser;
+      const listEl = document.getElementById('sidebar-chat-list');
+      if(!user){ listEl.innerHTML = '<div class="sidebar-empty">Log in to see your chats</div>'; return; }
+      db.collection('users').doc(user.uid).collection('chats')
+        .orderBy('updatedAt', 'desc')
+        .limit(30)
+        .get()
+        .then(snapshot => {
+          if(snapshot.empty){
+            listEl.innerHTML = '<div class="sidebar-empty">No chats yet</div>';
+            return;
+          }
+          listEl.innerHTML = '';
+          let rendered = 0;
+          snapshot.forEach(doc => {
+            const data = doc.data();
+            if(data.projectId) return;
+            rendered++;
+            const item = document.createElement('div');
+            item.className = 'sidebar-chat-item' + (doc.id === currentChatId ? ' active' : '');
+            item.innerHTML = '<span class="sidebar-chat-title">' + escapeHtml(data.title || 'Untitled chat') + '</span>' +
+              '<span class="sidebar-chat-actions">' +
+              '<button aria-label="Rename" onclick="renameChat(event, \'' + doc.id + '\')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></button>' +
+              '<button aria-label="Delete" onclick="deleteChat(event, \'' + doc.id + '\')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg></button>' +
+              '</span>';
+            item.onclick = () => openChatById(doc.id, data);
+            listEl.appendChild(item);
+          });
+          if(rendered === 0){
+            listEl.innerHTML = '<div class="sidebar-empty">No chats yet</div>';
+          }
+        })
+        .catch(err => {
+          console.error('Failed to load chats:', err);
+          listEl.innerHTML = '<div class="sidebar-empty">Could not load chats</div>';
+        });
+    }
+
+    function escapeHtml(str){
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    function openChatById(chatId, data){
+      currentChatId = chatId;
+      currentProjectId = data.projectId || null;
+      chatHistory = Array.isArray(data.messages) ? data.messages : [];
+      const cw = document.getElementById('chat-window');
+      cw.innerHTML = '';
+      if(chatHistory.length === 0){
+        cw.innerHTML = '<div class="chat-bubble chat-ai">Hi! I\'m your PrepMate AI tutor. Ask me anything you\'re studying.</div>';
+      } else {
+        chatHistory.forEach(msg => {
+          if(msg.role === 'user'){
+            const b = document.createElement('div');
+            b.className = 'chat-bubble chat-user';
+            b.textContent = msg.content;
+            cw.appendChild(b);
+          } else {
+            renderAiReply(msg.content, cw);
+          }
+        });
+      }
+      cw.scrollTop = cw.scrollHeight;
+      closeSidebar();
+      document.getElementById('page-chat').style.display = 'flex';
+    }
+
+    function renameChat(evt, chatId){
+      evt.stopPropagation();
+      const user = auth.currentUser;
+      if(!user) return;
+      const newTitle = prompt('Rename chat:');
+      if(!newTitle) return;
+      db.collection('users').doc(user.uid).collection('chats').doc(chatId)
+        .update({ title: newTitle.trim() })
+        .then(loadChatList)
+        .catch(err => console.error('Rename failed:', err));
+    }
+
+    function deleteChat(evt, chatId){
+      evt.stopPropagation();
+      const user = auth.currentUser;
+      if(!user) return;
+      if(!confirm('Delete this chat? This cannot be undone.')) return;
+      db.collection('users').doc(user.uid).collection('chats').doc(chatId)
+        .delete()
+        .then(() => {
+          if(chatId === currentChatId) startNewChat();
+          loadChatList();
+        })
+        .catch(err => console.error('Delete failed:', err));
+    }
+
+    function saveChatToFirestore(){
+      const user = auth.currentUser;
+      if(!user) return;
+      const ref = db.collection('users').doc(user.uid).collection('chats');
+      if(currentChatId){
+        ref.doc(currentChatId).update({
+          messages: chatHistory,
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        }).catch(err => console.error('Failed to update chat:', err));
+      } else {
+        const firstUserMsg = chatHistory.find(m => m.role === 'user');
+        const title = firstUserMsg ? firstUserMsg.content.slice(0, 40) : 'New chat';
+        ref.add({
+          title: title,
+          messages: chatHistory,
+          projectId: currentProjectId || null,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        }).then(docRef => {
+          currentChatId = docRef.id;
+        }).catch(err => console.error('Failed to save chat:', err));
+      }
+    }
+
+    function openTempChat(){
+      closeSidebar();
+      document.getElementById('page-temp-chat').style.display = 'flex';
+      loadOrStartTempChat();
+    }
+
+    function closeTempChatPage(){
+      document.getElementById('page-temp-chat').style.display = 'none';
+    }
+
+    function loadOrStartTempChat(){
+      const user = auth.currentUser;
+      const tw = document.getElementById('temp-chat-window');
+      const resetView = () => {
+        tempChatHistory = [];
+        tempChatDocId = null;
+        tw.innerHTML = '<div class="chat-bubble chat-ai">This is a temporary chat. It won\'t appear in your chat history and deletes itself after 30 days.</div>';
+      };
+      if(!user){ resetView(); return; }
+      db.collection('users').doc(user.uid).collection('tempChats')
+        .orderBy('updatedAt', 'desc')
+        .limit(1)
+        .get()
+        .then(snapshot => {
+          if(snapshot.empty){ resetView(); return; }
+          const doc = snapshot.docs[0];
+          const data = doc.data();
+          const expiresAt = data.expiresAt ? data.expiresAt.toDate() : null;
+          if(expiresAt && expiresAt.getTime() < Date.now()){
+            doc.ref.delete().catch(() => {});
+            resetView();
+            return;
+          }
+          tempChatDocId = doc.id;
+          tempChatHistory = Array.isArray(data.messages) ? data.messages : [];
+          tw.innerHTML = '';
+          if(tempChatHistory.length === 0){
+            resetView();
+          } else {
+            tempChatHistory.forEach(msg => {
+              if(msg.role === 'user'){
+                const b = document.createElement('div');
+                b.className = 'chat-bubble chat-user';
+                b.textContent = msg.content;
+                tw.appendChild(b);
+              } else {
+                renderAiReply(msg.content, tw);
+              }
+            });
+          }
+          tw.scrollTop = tw.scrollHeight;
+        })
+        .catch(() => resetView());
+    }
+
+    function sendTempChatMessage(){
+      const input = document.getElementById('temp-chat-input');
+      const message = input.value.trim();
+      if(!message) return;
+      const tw = document.getElementById('temp-chat-window');
+
+      const userBubble = document.createElement('div');
+      userBubble.className = 'chat-bubble chat-user';
+      userBubble.textContent = message;
+      tw.appendChild(userBubble);
+      input.value = '';
+      tw.scrollTop = tw.scrollHeight;
+
+      const typingEl = document.createElement('div');
+      typingEl.className = 'chat-typing';
+      typingEl.id = 'temp-chat-typing-indicator';
+      typingEl.textContent = 'PrepMate is typing...';
+      tw.appendChild(typingEl);
+      tw.scrollTop = tw.scrollHeight;
+
+      fetch(API_BASE + '/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: message, history: tempChatHistory })
+      })
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById('temp-chat-typing-indicator').remove();
+          renderAiReply(data.reply, tw, data.reasoning);
+          tempChatHistory.push({ role: 'user', content: message });
+          tempChatHistory.push({ role: 'assistant', content: data.reply });
+          saveTempChatToFirestore();
+        })
+        .catch(() => {
+          document.getElementById('temp-chat-typing-indicator').remove();
+          const errBubble = document.createElement('div');
+          errBubble.className = 'chat-bubble chat-ai';
+          errBubble.textContent = 'Sorry, I had trouble responding. Try again.';
+          tw.appendChild(errBubble);
+        });
+    }
+
+    function saveTempChatToFirestore(){
+      const user = auth.currentUser;
+      if(!user) return;
+      const ref = db.collection('users').doc(user.uid).collection('tempChats');
+      const expiresAt = firebase.firestore.Timestamp.fromDate(new Date(Date.now() + 30 * 24 * 60 * 60 * 1000));
+      if(tempChatDocId){
+        ref.doc(tempChatDocId).update({
+          messages: tempChatHistory,
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+          expiresAt: expiresAt
+        }).catch(err => console.error('Failed to update temp chat:', err));
+      } else {
+        ref.add({
+          messages: tempChatHistory,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+          expiresAt: expiresAt
+        }).then(docRef => { tempChatDocId = docRef.id; })
+          .catch(err => console.error('Failed to save temp chat:', err));
+      }
+    }
+
+    function openLibrary(){
+      closeSidebar();
+      document.getElementById('page-library').style.display = 'flex';
+      currentLibraryTab = 'all';
+      document.querySelectorAll('.library-tab').forEach(t => t.classList.remove('active'));
+      document.querySelector('.library-tab').classList.add('active');
+      loadLibraryItems();
+    }
+
+    function closeLibraryPage(){
+      document.getElementById('page-library').style.display = 'none';
+    }
+
+    function switchLibraryTab(tab, btnEl){
+      currentLibraryTab = tab;
+      document.querySelectorAll('.library-tab').forEach(t => t.classList.remove('active'));
+      btnEl.classList.add('active');
+      loadLibraryItems();
+    }
+
+    function loadLibraryItems(){
+      const grid = document.getElementById('library-grid');
+      const user = auth.currentUser;
+      if(!user){ grid.innerHTML = '<div class="sidebar-empty">Log in to see your library</div>'; return; }
+      grid.innerHTML = '<div class="sidebar-empty">Loading...</div>';
+      let query = db.collection('users').doc(user.uid).collection('libraryItems').orderBy('createdAt', 'desc').limit(60);
+      if(currentLibraryTab !== 'all'){
+        query = db.collection('users').doc(user.uid).collection('libraryItems')
+          .where('type', '==', currentLibraryTab)
+          .orderBy('createdAt', 'desc')
+          .limit(60);
+      }
+      query.get()
+        .then(snapshot => {
+          if(snapshot.empty){
+            grid.innerHTML = '<div class="sidebar-empty">No ' + (currentLibraryTab === 'all' ? 'files' : currentLibraryTab + 's') + ' yet — images and files you share in chat will show up here.</div>';
+            return;
+          }
+          grid.innerHTML = '';
+          snapshot.forEach(doc => {
+            const data = doc.data();
+            const item = document.createElement('div');
+            item.className = 'library-item';
+            if(data.type === 'image' && data.url){
+              item.innerHTML = '<img src="' + data.url + '" alt="' + escapeHtml(data.name || 'Image') + '">';
+            } else {
+              item.innerHTML = '<div class="library-item-file">📄<br>' + escapeHtml(data.name || 'File') + '</div>';
+            }
+            item.innerHTML += '<span class="library-item-label">' + escapeHtml(data.name || '') + '</span>';
+            if(data.url){ item.onclick = () => window.open(data.url, '_blank'); }
+            grid.appendChild(item);
+          });
+        })
+        .catch(err => {
+          console.error('Failed to load library:', err);
+          grid.innerHTML = '<div class="sidebar-empty">Could not load your library</div>';
+        });
+    }
+
+    function openProfilePage(){
+      closeSidebar();
+      document.getElementById('page-profile').style.display = 'flex';
+      const user = auth.currentUser;
+      if(!user) return;
+      populateNgClassOptions(document.getElementById('pp-ngclass'));
+      db.collection('users').doc(user.uid).get().then(doc => {
+        if(!doc.exists) return;
+        const data = doc.data();
+        document.getElementById('pp-name').value = data.name || '';
+        document.getElementById('pp-age').value = data.age || '';
+        document.getElementById('pp-country').value = data.country || 'Nigeria';
+        if(data.photoURL) document.getElementById('pp-avatar-img').src = data.photoURL;
+        onEditCountryChange();
+        if(data.ngClass) document.getElementById('pp-ngclass').value = data.ngClass;
+        if(data.otherClass) document.getElementById('pp-otherclass').value = data.otherClass;
+        onEditClassChange();
+        if(data.department) document.getElementById('pp-department').value = data.department;
+      });
+    }
+
+    function closeProfilePage(){
+      document.getElementById('page-profile').style.display = 'none';
+    }
+
+    function onEditCountryChange(){
+      const country = document.getElementById('pp-country').value;
+      document.getElementById('pp-ngclass-group').style.display = country === 'Nigeria' ? 'block' : 'none';
+      document.getElementById('pp-otherclass-group').style.display = country === 'Other' ? 'block' : 'none';
+      if(country !== 'Nigeria') document.getElementById('pp-department-group').style.display = 'none';
+    }
+
+    function onEditClassChange(){
+      const cls = document.getElementById('pp-ngclass').value;
+      document.getElementById('pp-department-group').style.display = ngNeedsDepartment(cls) ? 'block' : 'none';
+    }
+
+    function handleProfilePicUpload(inputEl){
+      const file = inputEl.files[0];
+      if(!file) return;
+      const user = auth.currentUser;
+      if(!user) return;
+
+      const formData = new FormData();
+      formData.append('image', file);
+
+      fetch(API_BASE + '/api/upload-image', { method: 'POST', body: formData })
+        .then(res => res.json())
+        .then(data => {
+          if(!data.url) throw new Error('Upload failed');
+          document.getElementById('pp-avatar-img').src = data.url;
+          return db.collection('users').doc(user.uid).update({ photoURL: data.url });
+        })
+        .catch(err => showPopup('Upload failed', err.message, true));
+    }
+
+    function saveProfileEdits(){
+      const user = auth.currentUser;
+      if(!user) return;
+      const name = document.getElementById('pp-name').value.trim();
+      const age = parseInt(document.getElementById('pp-age').value, 10);
+      const country = document.getElementById('pp-country').value;
+      if(!age || age < 3){ showPopup('Missing info', 'Please enter a valid age (3 or older).', true); return; }
+
+      const update = { name: name, age: age, country: country };
+      if(country === 'Nigeria'){
+        const ngClass = document.getElementById('pp-ngclass').value;
+        if(!ngClass){ showPopup('Missing info', 'Please select a class.', true); return; }
+        update.ngClass = ngClass;
+        update.classSession = getNigerianSession();
+        update.otherClass = null;
+        if(ngNeedsDepartment(ngClass)){
+          const dept = document.getElementById('pp-department').value;
+          if(!dept){ showPopup('Missing info', 'Please select a department.', true); return; }
+          update.department = dept;
+        } else {
+          update.department = null;
+        }
+      } else {
+        const otherClass = document.getElementById('pp-otherclass').value.trim();
+        if(!otherClass){ showPopup('Missing info', 'Please enter your class or grade.', true); return; }
+        update.otherClass = otherClass;
+        update.ngClass = null;
+        update.department = null;
+      }
+
+      db.collection('users').doc(user.uid).update(update)
+        .then(() => showPopup('Saved', 'Your profile has been updated.', false))
+        .catch(err => showPopup('Save failed', err.message, true));
+    }
+
+    function openProjects(){
+      closeSidebar();
+      document.getElementById('page-projects').style.display = 'flex';
+      loadProjectsList();
+    }
+
+    function closeProjectsPage(){
+      document.getElementById('page-projects').style.display = 'none';
+    }
+
+    function promptCreateProject(){
+      const user = auth.currentUser;
+      if(!user) return;
+      const name = prompt('Project name:');
+      if(!name || !name.trim()) return;
+      db.collection('users').doc(user.uid).collection('projects').add({
+        name: name.trim(),
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      }).then(loadProjectsList)
+        .catch(err => console.error('Failed to create project:', err));
+    }
+
+    function loadProjectsList(){
+      const list = document.getElementById('projects-list');
+      const user = auth.currentUser;
+      if(!user){ list.innerHTML = '<div class="sidebar-empty">Log in to see your projects</div>'; return; }
+      list.innerHTML = '<div class="sidebar-empty">Loading...</div>';
+      db.collection('users').doc(user.uid).collection('projects')
+        .orderBy('createdAt', 'desc')
+        .get()
+        .then(snapshot => {
+          if(snapshot.empty){
+            list.innerHTML = '<div class="sidebar-empty">No projects yet. Tap + to create one.</div>';
+            return;
+          }
+          list.innerHTML = '';
+          snapshot.forEach(doc => {
+            const data = doc.data();
+            const item = document.createElement('div');
+            item.className = 'project-item';
+            item.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--green-deep);flex-shrink:0;"><path d="M3 7l4-4h5l2 2h7v13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/></svg>' +
+              '<span class="project-item-name">' + escapeHtml(data.name || 'Untitled project') + '</span>';
+            item.onclick = () => openProjectView(doc.id, data.name || 'Untitled project');
+            list.appendChild(item);
+          });
+        })
+        .catch(err => {
+          console.error('Failed to load projects:', err);
+          list.innerHTML = '<div class="sidebar-empty">Could not load your projects</div>';
+        });
+    }
+
+    function openProjectView(projectId, projectName){
+      currentProjectId = projectId;
+      document.getElementById('project-view-title').textContent = projectName;
+      document.getElementById('page-projects').style.display = 'none';
+      document.getElementById('page-project-view').style.display = 'flex';
+      loadProjectChats(projectId);
+    }
+
+    function closeProjectView(){
+      document.getElementById('page-project-view').style.display = 'none';
+      document.getElementById('page-projects').style.display = 'flex';
+    }
+
+    function loadProjectChats(projectId){
+      const listEl = document.getElementById('project-chat-list');
+      const user = auth.currentUser;
+      if(!user){ listEl.innerHTML = '<div class="sidebar-empty">Log in to see this project</div>'; return; }
+      listEl.innerHTML = '<div class="sidebar-empty">Loading...</div>';
+      db.collection('users').doc(user.uid).collection('chats')
+        .where('projectId', '==', projectId)
+        .orderBy('updatedAt', 'desc')
+        .get()
+        .then(snapshot => {
+          if(snapshot.empty){
+            listEl.innerHTML = '<div class="sidebar-empty">No chats in this project yet. Tap + to start one.</div>';
+            return;
+          }
+          listEl.innerHTML = '';
+          snapshot.forEach(doc => {
+            const data = doc.data();
+            const item = document.createElement('div');
+            item.className = 'project-chat-item';
+            item.textContent = data.title || 'Untitled chat';
+            item.onclick = () => {
+              document.getElementById('page-project-view').style.display = 'none';
+              openChatById(doc.id, data);
+            };
+            listEl.appendChild(item);
+          });
+        })
+        .catch(err => {
+          console.error('Failed to load project chats:', err);
+          listEl.innerHTML = '<div class="sidebar-empty">Could not load chats</div>';
+        });
+    }
+
+    function startNewProjectChat(){
+      chatHistory = [];
+      currentChatId = null;
+      const cw = document.getElementById('chat-window');
+      cw.innerHTML = '<div class="chat-bubble chat-ai">Hi! I\'m your PrepMate AI tutor. Ask me anything you\'re studying.</div>';
+      document.getElementById('page-project-view').style.display = 'none';
+      document.getElementById('page-chat').style.display = 'flex';
+    }
+
+    function sendChatMessage(){
+      if(pendingAttachment){
+        sendImageMessage();
+        return;
+      }
+      const input = document.getElementById('chat-input');
+      const message = input.value.trim();
+      if(!message) return;
+
+      const chatWindow = document.getElementById('chat-window');
+
+      const userBubble = document.createElement('div');
+      userBubble.className = 'chat-bubble chat-user';
+      userBubble.textContent = message;
+      chatWindow.appendChild(userBubble);
+
+      input.value = '';
+      chatWindow.scrollTop = chatWindow.scrollHeight;
+
+      const typingEl = document.createElement('div');
+      typingEl.className = 'chat-typing';
+      typingEl.id = 'chat-typing-indicator';
+      typingEl.textContent = 'PrepMate is typing...';
+      chatWindow.appendChild(typingEl);
+      chatWindow.scrollTop = chatWindow.scrollHeight;
+
+      fetch(API_BASE + '/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: message, history: chatHistory, profile: buildProfilePayload() })
+      })
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById('chat-typing-indicator').remove();
+          renderAiReply(data.reply, chatWindow, data.reasoning);
+          chatHistory.push({ role: 'user', content: message });
+          chatHistory.push({ role: 'assistant', content: data.reply });
+          saveChatToFirestore();
+        })
+        .catch(err => {
+          document.getElementById('chat-typing-indicator').remove();
+          const errBubble = document.createElement('div');
+          errBubble.className = 'chat-bubble chat-ai';
+          errBubble.textContent = 'Sorry, I had trouble responding. Try again.';
+          chatWindow.appendChild(errBubble);
+        });
+    }
+
+    let currentVoice = 'austin';
+
+    function setVoice(voiceId, btnEl){
+      currentVoice = voiceId;
+      document.querySelectorAll('#chat-voice-row .chip-btn').forEach(b => b.classList.remove('selected'));
+      btnEl.classList.add('selected');
+    }
+
+    function toggleAttachMenu(){
+      document.getElementById('attach-menu-overlay').classList.toggle('open');
+      document.getElementById('attach-menu').classList.toggle('open');
+    }
+    function closeAttachMenu(){
+      document.getElementById('attach-menu-overlay').classList.remove('open');
+      document.getElementById('attach-menu').classList.remove('open');
+    }
+    function pickAttach(inputId){
+      closeAttachMenu();
+      document.getElementById(inputId).click();
+    }
+    let pendingAttachment = null;
+
+    function handleImageUpload(inputEl){
+      const file = inputEl.files[0];
+      if(!file) return;
+      pendingAttachment = file;
+
+      const previewBar = document.getElementById('chat-attach-preview');
+      const previewImg = document.getElementById('chat-attach-preview-img');
+      const previewName = document.getElementById('chat-attach-preview-name');
+
+      if(file.type.startsWith('image/')){
+        previewImg.src = URL.createObjectURL(file);
+        previewImg.style.display = 'block';
+      } else {
+        previewImg.style.display = 'none';
+      }
+      previewName.textContent = file.name;
+      previewBar.style.display = 'flex';
+
+      inputEl.value = '';
+      document.getElementById('chat-input').focus();
+    }
+
+    function removeAttachment(){
+      pendingAttachment = null;
+      document.getElementById('chat-attach-preview').style.display = 'none';
+      document.getElementById('chat-attach-preview-img').src = '';
+    }
+
+    function sendImageMessage(){
+      const file = pendingAttachment;
+      const question = document.getElementById('chat-input').value.trim();
+      const chatWindow = document.getElementById('chat-window');
+      const isImage = file.type.startsWith('image/');
+
+      const userBubble = document.createElement('div');
+      userBubble.className = 'chat-bubble chat-user';
+      let bubbleImg = null;
+      if(isImage){
+        bubbleImg = document.createElement('img');
+        bubbleImg.src = URL.createObjectURL(file);
+        bubbleImg.style.cssText = 'max-width:100%;border-radius:10px;display:block;';
+        userBubble.appendChild(bubbleImg);
+      }
+      if(question){
+        const p = document.createElement('div');
+        p.textContent = question;
+        p.style.marginTop = isImage ? '6px' : '0';
+        userBubble.appendChild(p);
+      }
+      chatWindow.appendChild(userBubble);
+
+      removeAttachment();
+      document.getElementById('chat-input').value = '';
+      chatWindow.scrollTop = chatWindow.scrollHeight;
+
+      const typingEl = document.createElement('div');
+      typingEl.className = 'chat-typing';
+      typingEl.id = 'chat-typing-indicator';
+      typingEl.textContent = 'PrepMate is looking at your file...';
+      chatWindow.appendChild(typingEl);
+      chatWindow.scrollTop = chatWindow.scrollHeight;
+
+      const helpFormData = new FormData();
+      helpFormData.append('image', file);
+      if(question) helpFormData.append('question', question);
+      if(userProfile) helpFormData.append('profile', JSON.stringify(buildProfilePayload()));
+
+      const uploadFormData = new FormData();
+      uploadFormData.append('image', file);
+
+      const helpRequest = fetch(API_BASE + '/api/image-help', { method: 'POST', body: helpFormData }).then(res => res.json());
+      const uploadRequest = isImage
+        ? fetch(API_BASE + '/api/upload-image', { method: 'POST', body: uploadFormData }).then(res => res.json()).catch(() => null)
+        : Promise.resolve(null);
+
+      Promise.all([helpRequest, uploadRequest])
+        .then(([data, uploadData]) => {
+          document.getElementById('chat-typing-indicator').remove();
+          renderAiReply(data.answer, chatWindow, data.reasoning);
+
+          const storedUrl = uploadData && uploadData.url ? uploadData.url : null;
+          if(storedUrl && bubbleImg) bubbleImg.src = storedUrl;
+
+          const userMsg = { role: 'user', content: question || '[Image uploaded]' };
+          if(storedUrl) userMsg.imageUrl = storedUrl;
+          chatHistory.push(userMsg);
+          chatHistory.push({ role: 'assistant', content: data.answer });
+          saveChatToFirestore();
+
+          const user = auth.currentUser;
+          if(storedUrl && user){
+            db.collection('users').doc(user.uid).collection('libraryItems').add({
+              type: 'image',
+              url: storedUrl,
+              name: file.name || 'Image',
+              createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            }).catch(err => console.error('Failed to save to library:', err));
+          }
+        })
+        .catch(() => {
+          document.getElementById('chat-typing-indicator').remove();
+          const errBubble = document.createElement('div');
+          errBubble.className = 'chat-bubble chat-ai';
+          errBubble.textContent = 'Sorry, I had trouble reading that file (only JPG/PNG are supported). Try again.';
+          chatWindow.appendChild(errBubble);
+        });
+    }
+
+    let voiceModeActive = false;
+    let mediaRecorder = null;
+    let audioChunks = [];
+
+    function toggleVoiceMode(){
+      if(voiceModeActive){
+        stopVoiceMode();
+      } else {
+        startVoiceMode();
+      }
+    }
+
+    function setVoiceOrbState(state, text){
+      const overlay = document.getElementById('voice-overlay');
+      overlay.classList.remove('state-listening', 'state-thinking', 'state-speaking');
+      overlay.classList.add('state-' + state);
+      document.getElementById('voice-status-text').textContent = text;
+    }
+
+    function closeVoiceOverlay(){
+      stopVoiceMode();
+    }
+
+    function startVoiceMode(){
+      navigator.mediaDevices.getUserMedia({ audio: true })
+        .then(stream => {
+          voiceModeActive = true;
+          document.getElementById('mic-btn').classList.add('mic-active');
+          document.getElementById('voice-overlay').classList.add('open');
+          setVoiceOrbState('listening', 'Listening...');
+          recordVoiceTurn(stream);
+        })
+        .catch(() => {
+          showPopup('Microphone blocked', 'Please allow microphone access to use voice chat.', true);
+        });
+    }
+
+    function stopVoiceMode(){
+      voiceModeActive = false;
+      const micBtn = document.getElementById('mic-btn');
+      if(micBtn) micBtn.classList.remove('mic-active');
+      document.getElementById('voice-overlay').classList.remove('open');
+      if(mediaRecorder){
+        if(mediaRecorder.state !== 'inactive') mediaRecorder.stop();
+        if(mediaRecorder.stream) mediaRecorder.stream.getTracks().forEach(t => t.stop());
+      }
+    }
+
+    function recordVoiceTurn(stream){
+      audioChunks = [];
+      mediaRecorder = new MediaRecorder(stream);
+      mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+      mediaRecorder.onstop = () => {
+        if(!voiceModeActive) return;
+        const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+        sendVoiceTurn(audioBlob, stream);
+      };
+      mediaRecorder.start();
+      setTimeout(() => { if(mediaRecorder && mediaRecorder.state !== 'inactive') mediaRecorder.stop(); }, 8000);
+    }
+
+    function sendVoiceTurn(audioBlob, stream){
+      if(voiceModeActive) setVoiceOrbState('thinking', 'Thinking...');
+      const chatWindow = document.getElementById('chat-window');
+      const typingEl = document.createElement('div');
+      typingEl.className = 'chat-typing';
+      typingEl.id = 'chat-typing-indicator';
+      typingEl.textContent = 'PrepMate is thinking...';
+      chatWindow.appendChild(typingEl);
+      chatWindow.scrollTop = chatWindow.scrollHeight;
+
+      const formData = new FormData();
+      formData.append('audio', audioBlob, 'voice.webm');
+      formData.append('history', JSON.stringify(chatHistory));
+      formData.append('voice', currentVoice);
+      if(userProfile) formData.append('profile', JSON.stringify(buildProfilePayload()));
+
+      fetch(API_BASE + '/api/voice-chat', { method: 'POST', body: formData })
+        .then(res => res.json())
+        .then(data => {
+          const indicator = document.getElementById('chat-typing-indicator');
+          if(indicator) indicator.remove();
+
+          const userBubble = document.createElement('div');
+          userBubble.className = 'chat-bubble chat-user';
+          userBubble.textContent = data.transcript;
+          chatWindow.appendChild(userBubble);
+
+          renderAiReply(data.replyText, chatWindow, data.reasoning);
+          chatHistory.push({ role: 'user', content: data.transcript });
+          chatHistory.push({ role: 'assistant', content: data.replyText });
+          saveChatToFirestore();
+
+          const audio = new Audio('data:audio/wav;base64,' + data.audioBase64);
+          if(voiceModeActive) setVoiceOrbState('speaking', 'Speaking...');
+          audio.onended = () => {
+            if(voiceModeActive){
+              setVoiceOrbState('listening', 'Listening...');
+              recordVoiceTurn(stream);
+            }
+          };
+          audio.play();
+        })
+        .catch(() => {
+          const indicator = document.getElementById('chat-typing-indicator');
+          if(indicator) indicator.remove();
+          if(voiceModeActive){
+            setVoiceOrbState('listening', 'Listening...');
+            recordVoiceTurn(stream);
+          }
+        });
+    }
+
+    const ICON_SPEAKER = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>';
+    const ICON_LOADING = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="chat-icon-spin"><path d="M21 12a9 9 0 1 1-9-9"/></svg>';
+
+    function renderAiReply(replyText, chatWindow, reasoningText){
+      if(reasoningText){
+        const thinkBlock = document.createElement('div');
+        thinkBlock.className = 'chat-thinking-block';
+        const toggle = document.createElement('button');
+        toggle.className = 'chat-thinking-toggle';
+        toggle.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span>Thought process</span><svg class="chat-thinking-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>';
+        const body = document.createElement('div');
+        body.className = 'chat-thinking-body';
+        body.textContent = reasoningText.trim();
+        toggle.onclick = () => thinkBlock.classList.toggle('open');
+        thinkBlock.appendChild(toggle);
+        thinkBlock.appendChild(body);
+        chatWindow.appendChild(thinkBlock);
+      }
+
+      const aiBubble = document.createElement('div');
+      aiBubble.className = 'chat-bubble chat-ai';
+
+      const parts = replyText.split(/```(\w*)\n?([\s\S]*?)```/g);
+      for(let i = 0; i < parts.length; i += 3){
+        if(parts[i]) aiBubble.appendChild(document.createTextNode(parts[i]));
+        const codePart = parts[i + 2];
+        if(codePart !== undefined){
+          const codeBlock = document.createElement('div');
+          codeBlock.className = 'chat-code-block';
+          const copyCodeBtn = document.createElement('button');
+          copyCodeBtn.className = 'chat-copy-code-btn';
+          copyCodeBtn.textContent = 'Copy code';
+          copyCodeBtn.onclick = () => copyText(codePart.trim(), copyCodeBtn, 'Copy code');
+          const codeText = document.createElement('div');
+          codeText.textContent = codePart.trim();
+          codeBlock.appendChild(copyCodeBtn);
+          codeBlock.appendChild(codeText);
+          aiBubble.appendChild(codeBlock);
+        }
+      }
+
+      const actions = document.createElement('div');
+      actions.className = 'chat-actions';
+
+      const copyBtn = document.createElement('button');
+      copyBtn.className = 'chat-action-btn';
+      copyBtn.setAttribute('aria-label', 'Copy response');
+      copyBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>';
+      copyBtn.onclick = () => copyText(replyText, copyBtn, null);
+      actions.appendChild(copyBtn);
+
+      const listenBtn = document.createElement('button');
+      listenBtn.className = 'chat-action-btn';
+      listenBtn.setAttribute('aria-label', 'Listen to response');
+      listenBtn.innerHTML = ICON_SPEAKER;
+      listenBtn.onclick = () => playReply(replyText, listenBtn);
+      actions.appendChild(listenBtn);
+
+      chatWindow.appendChild(aiBubble);
+      chatWindow.appendChild(actions);
+      chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+
+    function copyText(text, btnEl, tempLabel){
+      navigator.clipboard.writeText(text).then(() => {
+        if(tempLabel !== null){
+          const original = btnEl.textContent;
+          btnEl.textContent = 'Copied!';
+          setTimeout(() => { btnEl.textContent = original; }, 1500);
+        } else {
+          const original = btnEl.innerHTML;
+          btnEl.innerHTML = '✓';
+          setTimeout(() => { btnEl.innerHTML = original; }, 1500);
+        }
+      });
+    }
+
+    function playReply(text, btnEl){
+      btnEl.innerHTML = ICON_LOADING;
+      fetch(API_BASE + '/api/tts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: text, voice: currentVoice })
+      })
+        .then(res => res.json())
+        .then(data => {
+          btnEl.innerHTML = ICON_SPEAKER;
+          const audio = new Audio('data:audio/wav;base64,' + data.audioBase64);
+          audio.play();
+        })
+        .catch(err => { btnEl.innerHTML = ICON_SPEAKER; });
+    }
+
+    function switchAppTab(tab, btnEl){
+      document.querySelectorAll('.app-content').forEach(el => el.style.display = 'none');
+      document.getElementById('content-' + tab).style.display = 'block';
+      document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
+      btnEl.classList.add('active');
+      window.scrollTo(0,0);
+    }
+
+    function showPopup(title, message, isError){
+      const overlay = document.getElementById('popup-overlay');
+      const icon = document.getElementById('popup-icon');
+      document.getElementById('popup-title').textContent = title;
+      document.getElementById('popup-message').textContent = message;
+      icon.textContent = isError ? '✕' : '✓';
+      icon.classList.toggle('error', !!isError);
+      overlay.classList.add('show');
+    }
+    function closePopup(e){
+      if(e) e.stopPropagation();
+      document.getElementById('popup-overlay').classList.remove('show');
+    }
+
+    function showPage(which, authTab){
+      const landing = document.getElementById('page-landing');
+      const auth = document.getElementById('page-auth');
+      const app = document.getElementById('page-app');
+      const nav = document.getElementById('app-nav');
+
+      landing.style.display = 'none';
+      auth.style.display = 'none';
+      app.style.display = 'none';
+      nav.style.display = 'none';
+
+      if(which === 'auth'){
+        auth.style.display = 'block';
+        if(authTab) switchAuthTab(authTab);
+      } else if(which === 'app'){
+        app.style.display = 'block';
+        nav.style.display = 'flex';
+      } else {
+        landing.style.display = 'block';
+      }
+      window.scrollTo(0,0);
+    }
+
+    function switchAuthTab(which){
+      const signupForm = document.getElementById('signup-form');
+      const loginForm = document.getElementById('login-form');
+      const tabSignup = document.getElementById('tab-signup');
+      const tabLogin = document.getElementById('tab-login');
+      const note = document.getElementById('auth-toggle-note');
+
+      if(which === 'signup'){
+        signupForm.classList.remove('hidden');
+        loginForm.classList.add('hidden');
+        tabSignup.classList.add('active');
+        tabLogin.classList.remove('active');
+        tabSignup.setAttribute('aria-selected','true');
+        tabLogin.setAttribute('aria-selected','false');
+        note.innerHTML = 'Already have an account? <a href="#" onclick="switchAuthTab(\'login\'); return false;">Log in</a>';
+      } else {
+        loginForm.classList.remove('hidden');
+        signupForm.classList.add('hidden');
+        tabLogin.classList.add('active');
+        tabSignup.classList.remove('active');
+        tabLogin.setAttribute('aria-selected','true');
+        tabSignup.setAttribute('aria-selected','false');
+        note.innerHTML = 'New to PrepMate? <a href="#" onclick="switchAuthTab(\'signup\'); return false;">Sign up</a>';
+      }
+    }
+
+    function populateNgClassOptions(selectEl){
+      selectEl.innerHTML = '<option value="">Select class</option>' + NG_CLASSES.map(c => '<option value="' + c + '">' + c + '</option>').join('');
+    }
+
+    function onProfileCountryChange(){
+      const country = document.getElementById('pm-country').value;
+      document.getElementById('pm-ngclass-group').style.display = country === 'Nigeria' ? 'block' : 'none';
+      document.getElementById('pm-otherclass-group').style.display = country === 'Other' ? 'block' : 'none';
+      document.getElementById('pm-department-group').style.display = 'none';
+      if(country === 'Nigeria'){
+        const sel = document.getElementById('pm-ngclass');
+        populateNgClassOptions(sel);
+      }
+    }
+
+    function onProfileClassChange(){
+      const cls = document.getElementById('pm-ngclass').value;
+      document.getElementById('pm-department-group').style.display = ngNeedsDepartment(cls) ? 'block' : 'none';
+    }
+
+    let profileModalUid = null;
+
+    function openProfileModal(prefillData, departmentOnly){
+      const user = auth.currentUser;
+      profileModalUid = user ? user.uid : null;
+      const overlay = document.getElementById('profile-modal-overlay');
+      const sub = document.getElementById('profile-modal-sub');
+
+      if(departmentOnly){
+        sub.textContent = 'Please confirm your department for ' + (prefillData.ngClass || 'this class') + '.';
+        document.getElementById('pm-age-group').style.display = 'none';
+        document.getElementById('pm-country-group').style.display = 'none';
+        document.getElementById('pm-otherclass-group').style.display = 'none';
+        document.getElementById('pm-ngclass-group').style.display = 'none';
+        document.getElementById('pm-department-group').style.display = 'block';
+      } else {
+        sub.textContent = 'We need a few details so PrepMate can tailor questions to you.';
+        document.getElementById('pm-age-group').style.display = 'block';
+        document.getElementById('pm-country-group').style.display = 'block';
+        document.getElementById('pm-age').value = prefillData && prefillData.age ? prefillData.age : '';
+        document.getElementById('pm-country').value = prefillData && prefillData.country ? prefillData.country : '';
+        onProfileCountryChange();
+        if(prefillData && prefillData.ngClass) document.getElementById('pm-ngclass').value = prefillData.ngClass;
+        if(prefillData && prefillData.otherClass) document.getElementById('pm-otherclass').value = prefillData.otherClass;
+        onProfileClassChange();
+      }
+      if(prefillData && prefillData.department) document.getElementById('pm-department').value = prefillData.department;
+      overlay.classList.add('show');
+    }
+
+    function saveProfileCompletion(){
+      if(!profileModalUid) return;
+      const departmentOnly = document.getElementById('pm-age-group').style.display === 'none';
+      const update = {};
+
+      if(!departmentOnly){
+        const age = parseInt(document.getElementById('pm-age').value, 10);
+        const country = document.getElementById('pm-country').value;
+        if(!age || age < 3){ showPopup('Missing info', 'Please enter a valid age (3 or older).', true); return; }
+        if(!country){ showPopup('Missing info', 'Please select a country.', true); return; }
+        update.age = age;
+        update.country = country;
+        if(country === 'Nigeria'){
+          const ngClass = document.getElementById('pm-ngclass').value;
+          if(!ngClass){ showPopup('Missing info', 'Please select a class.', true); return; }
+          if(ngNeedsDepartment(ngClass)){
+            const dept = document.getElementById('pm-department').value;
+            if(!dept){ showPopup('Missing info', 'Please select a department.', true); return; }
+            update.department = dept;
+          } else {
+            update.department = null;
+          }
+          update.ngClass = ngClass;
+          update.classSession = getNigerianSession();
+          update.otherClass = null;
+        } else {
+          const otherClass = document.getElementById('pm-otherclass').value.trim();
+          if(!otherClass){ showPopup('Missing info', 'Please enter your class or grade.', true); return; }
+          update.otherClass = otherClass;
+          update.ngClass = null;
+          update.department = null;
+        }
+        update.profileComplete = true;
+      } else {
+        const dept = document.getElementById('pm-department').value;
+        if(!dept){ showPopup('Missing info', 'Please select a department.', true); return; }
+        update.department = dept;
+      }
+
+      db.collection('users').doc(profileModalUid).update(update)
+        .then(() => {
+          document.getElementById('profile-modal-overlay').classList.remove('show');
+          loadUserProfileCache(profileModalUid);
+          if(!departmentOnly) showPage('app');
+        })
+        .catch(err => showPopup('Save failed', err.message, true));
+    }
+
+    document.getElementById('signup-form').addEventListener('submit', function(e){
+      e.preventDefault();
+      const name = document.getElementById('su-name').value.trim();
+      const email = document.getElementById('su-email').value.trim();
+      const password = document.getElementById('su-password').value;
+      const btn = e.target.querySelector('.submit-btn');
+      btn.disabled = true;
+      btn.textContent = 'Creating account...';
+
+      auth.createUserWithEmailAndPassword(email, password)
+        .then((cred) => {
+          return db.collection('users').doc(cred.user.uid).set({
+            name: name,
+            email: email,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            weakTopics: {},
+            streak: 0,
+            profileComplete: false
+          }).then(() => cred.user.uid);
+        })
+        .then((uid) => {
+          btn.disabled = false;
+          btn.textContent = 'Create account';
+          openProfileModal({}, false);
+        })
+        .catch((error) => {
+          showPopup('Sign up failed', error.message, true);
+          btn.disabled = false;
+          btn.textContent = 'Create account';
+        });
+    });
+
+    document.getElementById('login-form').addEventListener('submit', function(e){
+      e.preventDefault();
+      const email = document.getElementById('li-email').value.trim();
+      const password = document.getElementById('li-password').value;
+      const btn = e.target.querySelector('.submit-btn');
+      btn.disabled = true;
+      btn.textContent = 'Logging in...';
+
+      auth.signInWithEmailAndPassword(email, password)
+        .then((cred) => {
+          btn.disabled = false;
+          btn.textContent = 'Log in';
+          return db.collection('users').doc(cred.user.uid).get();
+        })
+        .then((doc) => {
+          const data = doc.exists ? doc.data() : {};
+          if(!data.profileComplete){
+            openProfileModal(data, false);
+          } else {
+            userProfile = data;
+            showPopup('Welcome back!', 'You\'re logged in and ready to continue.', false);
+            setTimeout(() => showPage('app'), 1200);
+            checkClassPromotion(auth.currentUser.uid);
+          }
+        })
+        .catch((error) => {
+          showPopup('Log in failed', error.message, true);
+          btn.disabled = false;
+          btn.textContent = 'Log in';
+        });
+    });
+  </script>
+
+</body>
+</html>
