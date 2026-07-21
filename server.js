@@ -160,6 +160,28 @@ app.post('/api/voice-chat', upload.single('audio'), async (req, res) => {
   }
 });
 
+// ---------- 5. TEXT-TO-SPEECH (read any AI reply aloud) ----------
+app.post('/api/tts', async (req, res) => {
+  try {
+    const { text, voice } = req.body;
+    if (!text) return res.status(400).json({ error: 'text is required' });
+
+    const speechResponse = await groq.audio.speech.create({
+      model: 'playai-tts',
+      voice: voice || 'Fritz-PlayAI',
+      input: text,
+      response_format: 'wav'
+    });
+    const audioBuffer = Buffer.from(await speechResponse.arrayBuffer());
+    const audioBase64 = audioBuffer.toString('base64');
+
+    res.json({ audioBase64 });
+  } catch (err) {
+    console.error('tts error:', err.message);
+    res.status(500).json({ error: 'Failed to generate speech' });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`PrepMate server running on port ${PORT}`);
 });
