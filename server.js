@@ -182,6 +182,10 @@ app.post('/api/tts', async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`PrepMate server running on port ${PORT}`);
-});
+if (process.env.VERCEL !== '1') {
+  app.listen(PORT, () => {
+    console.log(`PrepMate server running on port ${PORT}`);
+  });
+}
+
+module.exports = app;
