@@ -60,13 +60,16 @@ Return ONLY valid JSON, no markdown, no extra text, in this exact shape:
 app.post('/api/image-help', upload.single('image'), async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ error: 'image file is required' });
+    if (!['image/jpeg', 'image/jpg', 'image/png'].includes(req.file.mimetype)) {
+      return res.status(400).json({ error: 'Only JPG and PNG images are supported.' });
+    }
     const userQuestion = req.body.question || 'Look at this image and help me understand and solve it. Explain step by step.';
 
     const base64Image = req.file.buffer.toString('base64');
     const mimeType = req.file.mimetype;
 
     const completion = await groq.chat.completions.create({
-      model: 'meta-llama/llama-4-maverick-17b-128e-instruct',
+      model: 'qwen/qwen3.6-27b',
       messages: [
         {
           role: 'user',
@@ -129,12 +132,13 @@ app.post('/api/voice-chat', upload.single('audio'), async (req, res) => {
 
     // Step 2: get the AI tutor's text reply
     const history = req.body.history ? JSON.parse(req.body.history) : [];
+    const selectedVoice = req.body.voice === 'hannah' ? 'hannah' : 'austin';
     const chatCompletion = await groq.chat.completions.create({
       model: 'openai/gpt-oss-120b',
       messages: [
         {
           role: 'system',
-          content: 'You are PrepMate, a friendly AI study tutor speaking out loud to a student. Keep replies conversational and reasonably short since they will be spoken aloud.'
+          content: 'You are PrepMate, a friendly AI study tutor speaking out loud to a student. Keep replies conversational and under 200 characters since they will be spoken aloud.'
         },
         ...history,
         { role: 'user', content: transcript }
@@ -143,11 +147,11 @@ app.post('/api/voice-chat', upload.single('audio'), async (req, res) => {
     });
     const replyText = chatCompletion.choices[0].message.content;
 
-    // Step 3: turn the reply into speech
+    // Step 3: turn the reply into speech (Orpheus caps input at 200 characters)
     const speechResponse = await groq.audio.speech.create({
-      model: 'playai-tts',
-      voice: 'Fritz-PlayAI',
-      input: replyText,
+      model: 'canopylabs/orpheus-v1-english',
+      voice: selectedVoice,
+      input: replyText.slice(0, 200),
       response_format: 'wav'
     });
     const audioBuffer = Buffer.from(await speechResponse.arrayBuffer());
@@ -167,9 +171,9 @@ app.post('/api/tts', async (req, res) => {
     if (!text) return res.status(400).json({ error: 'text is required' });
 
     const speechResponse = await groq.audio.speech.create({
-      model: 'playai-tts',
-      voice: voice || 'Fritz-PlayAI',
-      input: text,
+      model: 'canopylabs/orpheus-v1-english',
+      voice: voice === 'hannah' ? 'hannah' : 'austin',
+      input: text.slice(0, 200), // Orpheus caps input at 200 characters
       response_format: 'wav'
     });
     const audioBuffer = Buffer.from(await speechResponse.arrayBuffer());
