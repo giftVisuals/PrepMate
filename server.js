@@ -27,10 +27,12 @@ app.get('/', (req, res) => {
 // ---------- 1. GENERATE QUIZ QUESTION ----------
 app.post('/api/generate-question', async (req, res) => {
   try {
-    const { subject, topic } = req.body;
+    const { subject, topic, profile } = req.body;
     if (!subject) return res.status(400).json({ error: 'subject is required' });
 
-    const prompt = `Generate one multiple-choice exam-style practice question for the subject "${subject}"${topic ? `, focused on the topic "${topic}"` : ''}.
+    const curriculumContext = buildCurriculumContext(profile);
+
+    const prompt = `Generate one multiple-choice exam-style practice question for the subject "${subject}"${topic ? `, focused on the topic "${topic}"` : ''}.${curriculumContext}
 Return ONLY valid JSON, no markdown, no extra text, in this exact shape:
 {
   "question": "the question text",
@@ -42,7 +44,8 @@ Return ONLY valid JSON, no markdown, no extra text, in this exact shape:
     const completion = await groq.chat.completions.create({
       model: 'openai/gpt-oss-120b',
       messages: [{ role: 'user', content: prompt }],
-      temperature: 0.7
+      temperature: 0.7,
+      reasoning_format: 'parsed'
     });
 
     const raw = completion.choices[0].message.content.trim();
@@ -56,6 +59,18 @@ Return ONLY valid JSON, no markdown, no extra text, in this exact shape:
   }
 });
 
+// ---------- shared helper: turn a student profile into a curriculum instruction ----------
+function buildCurriculumContext(profile) {
+  if (!profile) return '';
+  if (profile.country === 'Nigeria' && profile.ngClass) {
+    return ` The student is in ${profile.ngClass} in Nigeria, following the Nigerian curriculum (WAEC/NECO/JAMB syllabus).${profile.department ? ` Their department is ${profile.department}.` : ''} Match difficulty, topic scope, and examples to that class level and syllabus.`;
+  }
+  if (profile.country) {
+    return ` The student is at level "${profile.otherClass || 'unspecified'}" in ${profile.country}. Match difficulty and examples to that level.`;
+  }
+  return '';
+}
+
 // ---------- 2. IMAGE HELP (upload a photo, AI explains/answers it) ----------
 app.post('/api/image-help', upload.single('image'), async (req, res) => {
   try {
@@ -63,7 +78,9 @@ app.post('/api/image-help', upload.single('image'), async (req, res) => {
     if (!['image/jpeg', 'image/jpg', 'image/png'].includes(req.file.mimetype)) {
       return res.status(400).json({ error: 'Only JPG and PNG images are supported.' });
     }
-    const userQuestion = req.body.question || 'Look at this image and help me understand and solve it. Explain step by step.';
+    let profile = null;
+    try { profile = req.body.profile ? JSON.parse(req.body.profile) : null; } catch (e) {}
+    const userQuestion = (req.body.question || 'Look at this image and help me understand and solve it. Explain step by step.') + buildCurriculumContext(profile);
 
     const base64Image = req.file.buffer.toString('base64');
     const mimeType = req.file.mimetype;
@@ -79,26 +96,55 @@ app.post('/api/image-help', upload.single('image'), async (req, res) => {
           ]
         }
       ],
-      temperature: 0.4
+      temperature: 0.4,
+      reasoning_format: 'parsed'
     });
 
-    res.json({ answer: completion.choices[0].message.content });
+    res.json({ answer: completion.choices[0].message.content, reasoning: completion.choices[0].message.reasoning || null });
   } catch (err) {
     console.error('image-help error:', err.message);
     res.status(500).json({ error: 'Failed to process image' });
   }
 });
 
+// ---------- 2b. IMAGE UPLOAD (stores image on ImgBB, returns only a clean URL — key never reaches the frontend) ----------
+app.post('/api/upload-image', upload.single('image'), async (req, res) => {
+  try {
+    if (!req.file) return res.status(400).json({ error: 'image file is required' });
+
+    const base64Image = req.file.buffer.toString('base64');
+    const params = new URLSearchParams();
+    params.append('key', process.env.IMGBB_API_KEY);
+    params.append('image', base64Image);
+
+    const imgbbRes = await fetch('https://api.imgbb.com/1/upload', {
+      method: 'POST',
+      body: params
+    });
+    const imgbbData = await imgbbRes.json();
+
+    if (!imgbbData.success) {
+      console.error('imgbb upload failed:', imgbbData);
+      return res.status(500).json({ error: 'Failed to store image' });
+    }
+
+    res.json({ url: imgbbData.data.url });
+  } catch (err) {
+    console.error('upload-image error:', err.message);
+    res.status(500).json({ error: 'Failed to store image' });
+  }
+});
+
 // ---------- 3. LIVE TEXT CHAT WITH AI TUTOR ----------
 app.post('/api/chat', async (req, res) => {
   try {
-    const { message, history } = req.body;
+    const { message, history, profile } = req.body;
     if (!message) return res.status(400).json({ error: 'message is required' });
 
     const messages = [
       {
         role: 'system',
-        content: 'You are PrepMate, a friendly, encouraging AI study tutor. Explain concepts in simple, clear language. Keep answers focused and not too long unless the student asks for depth.'
+        content: 'You are PrepMate, a friendly, encouraging AI study tutor. Explain concepts in simple, clear language. Keep answers focused and not too long unless the student asks for depth. Never use markdown symbols like **, ##, or # in your replies — write in plain sentences and paragraphs only. You can occasionally use a relevant emoji here and there, but do not overuse them.' + buildCurriculumContext(profile)
       },
       ...(Array.isArray(history) ? history : []),
       { role: 'user', content: message }
@@ -107,10 +153,11 @@ app.post('/api/chat', async (req, res) => {
     const completion = await groq.chat.completions.create({
       model: 'openai/gpt-oss-120b',
       messages,
-      temperature: 0.6
+      temperature: 0.6,
+      reasoning_format: 'parsed'
     });
 
-    res.json({ reply: completion.choices[0].message.content });
+    res.json({ reply: completion.choices[0].message.content, reasoning: completion.choices[0].message.reasoning || null });
   } catch (err) {
     console.error('chat error:', err.message);
     res.status(500).json({ error: 'Failed to get AI reply' });
@@ -133,17 +180,20 @@ app.post('/api/voice-chat', upload.single('audio'), async (req, res) => {
     // Step 2: get the AI tutor's text reply
     const history = req.body.history ? JSON.parse(req.body.history) : [];
     const selectedVoice = req.body.voice === 'hannah' ? 'hannah' : 'austin';
+    let voiceProfile = null;
+    try { voiceProfile = req.body.profile ? JSON.parse(req.body.profile) : null; } catch (e) {}
     const chatCompletion = await groq.chat.completions.create({
       model: 'openai/gpt-oss-120b',
       messages: [
         {
           role: 'system',
-          content: 'You are PrepMate, a friendly AI study tutor speaking out loud to a student. Keep replies conversational and under 200 characters since they will be spoken aloud.'
+          content: 'You are PrepMate, a friendly AI study tutor speaking out loud to a student. Keep replies conversational and under 200 characters since they will be spoken aloud. Never use markdown symbols like **, ##, or # — plain spoken sentences only. You can occasionally use a relevant emoji, but do not overuse them.' + buildCurriculumContext(voiceProfile)
         },
         ...history,
         { role: 'user', content: transcript }
       ],
-      temperature: 0.6
+      temperature: 0.6,
+      reasoning_format: 'parsed'
     });
     const replyText = chatCompletion.choices[0].message.content;
 
