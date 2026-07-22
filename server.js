@@ -144,33 +144,21 @@ app.post('/api/generate-image', async (req, res) => {
     const { prompt } = req.body;
     if (!prompt) return res.status(400).json({ error: 'prompt is required' });
 
-    const geminiRes = await fetch(
-      'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-goog-api-key': process.env.GEMINI_API_KEY
-        },
-        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-      }
-    );
-    const geminiData = await geminiRes.json();
+    const pollinationsUrl = `https://gen.pollinations.ai/image/${encodeURIComponent(prompt)}?model=flux`;
+    const imgRes = await fetch(pollinationsUrl, {
+      headers: { Authorization: `Bearer ${process.env.POLLINATIONS_API_KEY}` }
+    });
 
-    if (!geminiRes.ok) {
-      console.error('gemini error:', geminiData);
-      return res.status(500).json({ error: geminiData.error?.message || 'Image generation failed' });
+    if (!imgRes.ok) {
+      const errBody = await imgRes.text();
+      console.error('pollinations error:', imgRes.status, errBody);
+      return res.status(500).json({ error: 'Image generation failed. Try a different prompt.' });
     }
 
-    const parts = geminiData.candidates?.[0]?.content?.parts || [];
-    const imagePart = parts.find(p => p.inlineData || p.inline_data);
-    const inline = imagePart ? (imagePart.inlineData || imagePart.inline_data) : null;
+    const arrayBuffer = await imgRes.arrayBuffer();
+    const base64Image = Buffer.from(arrayBuffer).toString('base64');
 
-    if (!inline || !inline.data) {
-      return res.status(500).json({ error: 'No image was returned. Try a different prompt.' });
-    }
-
-    const url = await uploadBase64ToImgbb(inline.data);
+    const url = await uploadBase64ToImgbb(base64Image);
     res.json({ url });
   } catch (err) {
     console.error('generate-image error:', err.message);
