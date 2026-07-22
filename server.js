@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 3000;
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
 
 // memory storage — files never touch disk, just held as buffers in RAM
 const upload = multer({
@@ -108,30 +108,73 @@ app.post('/api/image-help', upload.single('image'), async (req, res) => {
 });
 
 // ---------- 2b. IMAGE UPLOAD (stores image on ImgBB, returns only a clean URL — key never reaches the frontend) ----------
+async function uploadBase64ToImgbb(base64Image) {
+  const params = new URLSearchParams();
+  params.append('key', process.env.IMGBB_API_KEY);
+  params.append('image', base64Image);
+
+  const imgbbRes = await fetch('https://api.imgbb.com/1/upload', {
+    method: 'POST',
+    body: params
+  });
+  const imgbbData = await imgbbRes.json();
+
+  if (!imgbbData.success) {
+    console.error('imgbb upload failed:', imgbbData);
+    throw new Error('Failed to store image');
+  }
+  return imgbbData.data.url;
+}
+
 app.post('/api/upload-image', upload.single('image'), async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ error: 'image file is required' });
-
     const base64Image = req.file.buffer.toString('base64');
-    const params = new URLSearchParams();
-    params.append('key', process.env.IMGBB_API_KEY);
-    params.append('image', base64Image);
-
-    const imgbbRes = await fetch('https://api.imgbb.com/1/upload', {
-      method: 'POST',
-      body: params
-    });
-    const imgbbData = await imgbbRes.json();
-
-    if (!imgbbData.success) {
-      console.error('imgbb upload failed:', imgbbData);
-      return res.status(500).json({ error: 'Failed to store image' });
-    }
-
-    res.json({ url: imgbbData.data.url });
+    const url = await uploadBase64ToImgbb(base64Image);
+    res.json({ url });
   } catch (err) {
     console.error('upload-image error:', err.message);
     res.status(500).json({ error: 'Failed to store image' });
+  }
+});
+
+// ---------- 2c. IMAGE GENERATION (Gemini 2.5 Flash Image, stored via ImgBB) ----------
+app.post('/api/generate-image', async (req, res) => {
+  try {
+    const { prompt } = req.body;
+    if (!prompt) return res.status(400).json({ error: 'prompt is required' });
+
+    const geminiRes = await fetch(
+      'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-goog-api-key': process.env.GEMINI_API_KEY
+        },
+        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+      }
+    );
+    const geminiData = await geminiRes.json();
+
+    if (!geminiRes.ok) {
+      console.error('gemini error:', geminiData);
+      return res.status(500).json({ error: geminiData.error?.message || 'Image generation failed' });
+    }
+
+    const parts = geminiData.candidates?.[0]?.content?.parts || [];
+    const imagePart = parts.find(p => p.inlineData || p.inline_data);
+    const inline = imagePart ? (imagePart.inlineData || imagePart.inline_data) : null;
+
+    if (!inline || !inline.data) {
+      return res.status(500).json({ error: 'No image was returned. Try a different prompt.' });
+    }
+
+    const url = await uploadBase64ToImgbb(inline.data);
+    res.json({ url });
+  } catch (err) {
+    console.error('generate-image error:', err.message);
+    res.status(500).json({ error: 'Failed to generate image' });
   }
 });
 
